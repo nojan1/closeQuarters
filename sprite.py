@@ -5,21 +5,27 @@ class nSprite(object):
     def __init__(self):
         self.image = None
         self.pos = None
+        self.size = None
+
+    def getSize(self):
+        if self.image == None:
+            return self.size
+        else:
+            self.image.get_size()
 
     def getRect(self):
-        if self.image == None or self.pos == None:
-            print("Warning: Not enough info to generate sprite rect")
-            return None
+        #if self.image == None or self.pos == None:
+         #   print("Warning: Not enough info to generate sprite rect")
+          #  return None
 
-        return Rect(self.pos, self.image.get_size())
+        return Rect(self.pos, self.getSize())
 
     def getRectScreen(self, game):
         rect = self.getRect()
         if rect == None:
             return None
 
-        x,y = worldToScreen((rect.x, rect.y), game.getView())
-        rect.move_ip(x, y)
+        rect.x, rect.y = worldToScreen(rect.topleft, game.getView())
         return rect
 
     def draw(self, screen, game):
@@ -32,3 +38,6 @@ class nSprite(object):
             return
 
         screen.blit(self.image, self.getRectScreen(game))
+
+    def onCollision(self):
+        return False

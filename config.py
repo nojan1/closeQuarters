@@ -1,0 +1,8 @@
+GRAPHICPATH="./graphics"
+SOUNDPATH="./sounds"
+LEVELPATH="./levels"
+
+#===MENU====
+BUTTONSIZE = [300, 40]
+BUTTONOFFSETY = 150
+BUTTONSPACINGY = 20

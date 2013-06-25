@@ -17,6 +17,16 @@ class Floor(Tile):
     def draw(self, screen, game):
         screen.fill((100,100,100), self.getRectScreen(game))
 
+class Empty(Tile):
+    def __init__(self, location):
+        Tile.__init__(self, location)
+
+    def draw(self, screen, game):
+        pass
+        
+    def onCollision(self):
+        return True
+
 class Wall(Tile):
     def __init__(self, location):
         Tile.__init__(self, location)

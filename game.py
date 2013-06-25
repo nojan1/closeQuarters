@@ -14,7 +14,6 @@ class Game(Mode):
         self.player = Player((200,200))
 
         self.bullets = []
-        self.mobs = []
 
     def getView(self):
         tmp = Rect((0, 0), tuple(self.core.res))
@@ -38,6 +37,8 @@ class Game(Mode):
         #Draw bullets
         for b in self.bullets:
             b.draw(screen, self)
+
+        self.map.drawMobsInView(screen, self)
 
     def onPostEventCheck(self, core):
         states = key.get_pressed()
@@ -66,11 +67,13 @@ class Game(Mode):
             b.move()
             if b.hitWall(self.map):
                 self.bullets.remove(b)
+                continue
 
-            mobHitted = b.hitMob(self.mobs)
+            mobHitted = b.hitMob(self.map)
             if not mobHitted == False:
                 self.bullets.remove(b)
-                
+                self.map.mobWasHit(mobHitted, self.player.weapons[0]) 
+                #Add splash animation?
             
     def handleEvent(self, event, core):
         if event.type == KEYDOWN:

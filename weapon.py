@@ -18,7 +18,12 @@ class Bullet(object):
 
         self.pos = (newX, newY)
 
-    def hitMob(self, mobs):
+    def hitMob(self, map):
+        selfRect = Rect(self.pos, (1,1))
+        for m in map.mobs:
+            if selfRect.colliderect(m.getRect()):
+                return m
+
         return False
 
     def hitWall(self, map):

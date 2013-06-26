@@ -9,10 +9,10 @@ class Mode(object):
     def onQuit(self):
         return True
 
-    def onPreEventCheck(self, core, numTicks):
+    def onPreDraw(self, core, numTicks):
         pass
 
-    def onPostEventCheck(self, core, numTicks):
+    def onComputations(self, core, numTicks):
         pass
 
     def onDraw(self, screen, core):

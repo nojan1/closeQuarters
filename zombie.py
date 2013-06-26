@@ -10,11 +10,14 @@ class Zombie(nSprite):
 
         self.ai = ai
 
+        self.hasActivated = False
+
     def draw(self, screen, game):
         rectScreen = self.getRectScreen(game)
 
         #Draw mob
         screen.fill((100,0,200), rectScreen)
+        self.hasActivated = False
 
     def takeDamage(self, damage):
         #True = Dead, False = "Took it like a man"
@@ -22,6 +25,10 @@ class Zombie(nSprite):
 
 
     def onActivation(self, game):
+        if self.hasActivated:
+            return
+
+        self.hasActivated = True
         path = self.ai.canSeePlayer(self, game)
         if path:
             if path[1] < ATTACKTHRESHOLD:

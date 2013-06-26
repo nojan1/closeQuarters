@@ -11,9 +11,14 @@ class Player(nSprite):
         self.pos = pos
         self.size = (30,30)
 
-        self.facingAngle = 20
+        self.facingAngle = 0
 
         self.weapons = [ WeaponFactory("pistol") ]
+        self.maxHealth = 10.0
+        self.health = self.maxHealth
+        self.health = 5.0
+
+        self.hasMoved = False
 
     def setFacing(self, mouseCoords, game):
         (x1, y1) = self.getRectScreen(game).center
@@ -24,8 +29,8 @@ class Player(nSprite):
 
         self.facingAngle = math.atan2(dY * -1, dX * -1)
 
-    def fireWeapon(self):
-        retVal = self.weapons[0].fire(self.getRect().center, self.facingAngle)
+    def fireWeapon(self, numTicks):
+        retVal = self.weapons[0].fire(self.getRect().center, self.facingAngle, numTicks)
         
         if self.weapons[0].isDepleted():
             self.weapons.pop(0)
@@ -33,6 +38,9 @@ class Player(nSprite):
         return retVal
 
     def move(self, xMove, yMove, worldMap):
+        if self.hasMoved or (xMove == 0 and yMove == 0):
+            return 
+
         tmpRect = self.getRect()
         
         xMove *= PLAYERMOVE
@@ -41,6 +49,8 @@ class Player(nSprite):
 
         if worldMap.isAllowedPosition(tmpRect):
             self.pos = tmpRect.topleft
+            self.hasMoved = True
+    
 
     def draw(self, screen, game):
         rectScreen = self.getRectScreen(game)
@@ -58,5 +68,6 @@ class Player(nSprite):
 
         #Draw character
         screen.fill((255,0,0), rectScreen)
+        self.hasMoved = False
 
         

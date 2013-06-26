@@ -1,5 +1,6 @@
 import os
 import random
+import math
 
 from tile import *
 from config import *
@@ -15,7 +16,8 @@ class Map(object):
     def loadLevel(self, levelID):
         ai = AI()
         self.tiles = []
-        
+        mobsToAlloc = []
+
         tileTextures = TextureSet("tiles.png")
 
         path = os.path.join(LEVELPATH, str(levelID)+".lvl")
@@ -33,8 +35,8 @@ class Map(object):
                 elif char == "W":
                     x.append(Wall(pos, tileTextures))
                 elif char == "Z":
-                    #Group of mobs, how many depends on dificulty
-                    self.allocateMobs(pos, 3, Zombie, ai)
+                    #Mobs to allocate later when the tile grid is complete
+                    mobsToAlloc.append([pos, 2, Zombie, ai])
                     
                     #Fill in blank with floor
                     x.append(Floor(pos, tileTextures))
@@ -42,6 +44,8 @@ class Map(object):
                     print("Warning: Unknown tile; ", char)
 
             self.tiles.append(x)
+
+        self.allocateMobs(mobsToAlloc)
             
     def updateMobs(self, game):
         for m in self.mobs:
@@ -54,27 +58,33 @@ class Map(object):
                 m.draw(screen, game)
 
     def drawTilesInView(self, screen, game):
-        for y in self.tiles:
-            for tile in y:
-                if tile != None and tile.getRect().colliderect(game.getView()):
+        window = game.getView()
+        low = self.getTileCoords(window.topleft)
+        
+        upperX = (window.width / TILESIZE[0]) + 2 + low[0]
+        upperY = (window.height / TILESIZE[1]) + 2 + low[1]
+
+        for y in self.tiles[low[1]:upperY]:
+            for tile in y[low[0]:upperX]:
+                if tile != None and tile.getRect().colliderect(game.getView()): # <= This might be redundant
                     tile.draw(screen, game)
 
     def isAllowedPosition(self, rectToCheck):
-        for y in self.tiles:
-            for tile in y:
-                if tile != None and tile.getRect().colliderect(rectToCheck):
-                    if tile.onCollision():
-                        return False
+        tile = self.getTileFromPos(rectToCheck.topleft)
+        if tile:
+            return not tile.onCollision()
+        else:
+            return False
 
-        return True
+    def getTileFromPos(self, pos):
+        x, y = self.getTileCoords(pos)
+        return self.get(x, y)
 
-    def findTileFromPos(self, pos):
-        for y in self.tiles:
-            for tile in y:
-                if tile.getRect().collidepoint(pos):
-                    return tile
-
-        return None
+    def getTileCoords(self, pos):
+        x = int(float(pos[0]) / float(TILESIZE[0]))
+        y = int(float(pos[1]) / float(TILESIZE[1]))
+        
+        return (x,y)
 
     def mobWasHit(self, mobHitted, weapon):
         if mobHitted.takeDamage(weapon.damage):
@@ -87,35 +97,41 @@ class Map(object):
         
         return False
 
-    def allocateMobs(self, tileCoords, numMobs, mobClass, ai):
-        basePos = (tileCoords[0] * TILESIZE[0], tileCoords[1] * TILESIZE[1])
+    def allocateMobs(self, mobsToAlloc):
+        for (tileCoords, numMobs, mobClass, ai) in mobsToAlloc: 
+            basePos = (tileCoords[0] * TILESIZE[0], tileCoords[1] * TILESIZE[1])
 
-        posDirs = [(0,-1), (1,0), (0,1), (-1,0)]
-        random.shuffle(posDirs)
+            posDirs = [(0,-1), (1,0), (0,1), (-1,0)]
+            random.shuffle(posDirs)
 
-        for i in range(numMobs):
-            testMob = mobClass(basePos, ai)
-            if self.mobPresent(basePos):
-                #Find new pos
-                addedDistance = 0
-                while 1:
-                    addedDistance += testMob.getRect().width
-                    newPos = (basePos[0] + (posDirs[0][0] * addedDistance), basePos[1] + (posDirs[0][1] * addedDistance))
-                    testMob = mobClass(newPos, ai)
+            for i in range(numMobs):
+                testMob = mobClass(basePos, ai)
+                if self.mobPresent(basePos):
+                    #Find new position
+                    addedDistance = 0
+                    while 1:
+                        addedDistance += testMob.getRect().width
+                        newPos = (basePos[0] + (posDirs[0][0] * addedDistance), basePos[1] + (posDirs[0][1] * addedDistance))
+                        testMob = mobClass(newPos, ai)
                 
-                    if not self.isAllowedPosition(testMob.getRect()):
-                        posDirs.pop(0)
-                        if len(posDirs) == 0:
-                            print("Warning unable to place mob num %i with base position; x=%i and y=%i" % (i, basePos))
-                            return
+                        if not self.isAllowedPosition(testMob.getRect()):
+                            posDirs.pop(0)
+                            addedDistance = 0
+                            if len(posDirs) == 0:
+                                print("Warning unable to place mob num %i with base position; x=%i and y=%i" % (i, basePos))
+                                break
+                            
+                            continue
 
-                    if not self.mobPresent(newPos):
-                        break
+                        if not self.mobPresent(newPos):
+                            break
 
-            self.mobs.append(testMob)
+                self.mobs.append(testMob)
+
+                
 
     def get(self, x, y):
         try:
-            return self.tiles[x][y]
+            return self.tiles[y][x]
         except:
             return False

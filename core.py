@@ -1,4 +1,5 @@
 from pygame import *
+import sys
 
 class Core(object):
     def __init__(self, resolution, fullscreen):
@@ -50,26 +51,22 @@ class Core(object):
             raise Exception("Critical: No mode set, nothing to do!")
 
         lastDraw = 0
-        numTicks = 0
         while self.runLoop:
-            numTicks += time.get_ticks()
-
-            if numTicks - lastDraw > (1000.0 / self.activeMode.fps):
-                lastDraw = numTicks
+            if time.get_ticks() - lastDraw > (1000.0 / self.activeMode.fps):
+                lastDraw = time.get_ticks()
+                self.activeMode.onPreDraw(self, time.get_ticks())
                 self.activeMode.onDraw(self.screen, self)
                 display.update()
             else:
-                self.activeMode.onPreEventCheck(self, numTicks)
-
                 for e in event.get():
                     if e.type == QUIT:
                         if self.activeMode.onQuit():
                             self.runLoop = False
                             break
                     else:
-                        self.activeMode.handleEvent(e, self, numTicks)
+                        self.activeMode.handleEvent(e, self, time.get_ticks())
             
-                self.activeMode.onPostEventCheck(self, numTicks)
+                self.activeMode.onComputations(self, time.get_ticks())
             
 
         #Pygame quit

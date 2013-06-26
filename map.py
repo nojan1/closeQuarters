@@ -1,8 +1,11 @@
 import os
+import random
 
 from tile import *
 from config import *
 from zombie import *
+from textureset import *
+from ai import AI
 
 class Map(object):
     def __init__(self):
@@ -10,8 +13,11 @@ class Map(object):
         self.mobs = []
 
     def loadLevel(self, levelID):
+        ai = AI()
         self.tiles = []
         
+        tileTextures = TextureSet("tiles.png")
+
         path = os.path.join(LEVELPATH, str(levelID)+".lvl")
         if not os.path.exists(path):
             raise Exception("No such levelfile;", path)
@@ -20,23 +26,28 @@ class Map(object):
             x = []
             for xPos, char in enumerate(line.strip()):
                 pos = (xPos, yPos)
-                if char == ".":
-                    x.append(Empty(pos))
+                if char == "." or char == " ":
+                    x.append(Empty(pos, tileTextures))
                 elif char == "#":
-                    x.append(Floor(pos))
+                    x.append(Floor(pos, tileTextures))
                 elif char == "W":
-                    x.append(Wall(pos))
+                    x.append(Wall(pos, tileTextures))
                 elif char == "Z":
                     #Group of mobs, how many depends on dificulty
-                    self.allocateMobs(pos, 10, Zombie)
+                    self.allocateMobs(pos, 3, Zombie, ai)
                     
                     #Fill in blank with floor
-                    x.append(Floor(pos))
+                    x.append(Floor(pos, tileTextures))
                 else:
                     print("Warning: Unknown tile; ", char)
 
             self.tiles.append(x)
             
+    def updateMobs(self, game):
+        for m in self.mobs:
+            if m.getRect().colliderect(game.getView()):
+                m.onActivation(game)
+
     def drawMobsInView(self, screen, game):
         for m in self.mobs:
             if m.getRect().colliderect(game.getView()):
@@ -57,6 +68,14 @@ class Map(object):
 
         return True
 
+    def findTileFromPos(self, pos):
+        for y in self.tiles:
+            for tile in y:
+                if tile.getRect().collidepoint(pos):
+                    return tile
+
+        return None
+
     def mobWasHit(self, mobHitted, weapon):
         if mobHitted.takeDamage(weapon.damage):
             self.mobs.remove(mobHitted)
@@ -68,20 +87,21 @@ class Map(object):
         
         return False
 
-    def allocateMobs(self, tileCoords, numMobs, mobClass):
+    def allocateMobs(self, tileCoords, numMobs, mobClass, ai):
         basePos = (tileCoords[0] * TILESIZE[0], tileCoords[1] * TILESIZE[1])
 
         posDirs = [(0,-1), (1,0), (0,1), (-1,0)]
+        random.shuffle(posDirs)
 
         for i in range(numMobs):
-            testMob = mobClass(basePos)
+            testMob = mobClass(basePos, ai)
             if self.mobPresent(basePos):
                 #Find new pos
                 addedDistance = 0
                 while 1:
                     addedDistance += testMob.getRect().width
                     newPos = (basePos[0] + (posDirs[0][0] * addedDistance), basePos[1] + (posDirs[0][1] * addedDistance))
-                    testMob = mobClass(newPos)
+                    testMob = mobClass(newPos, ai)
                 
                     if not self.isAllowedPosition(testMob.getRect()):
                         posDirs.pop(0)

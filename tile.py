@@ -11,14 +11,11 @@ class Tile(nSprite):
         self.size = TILESIZE
 
 class Floor(Tile):
-    def __init__(self, location):
-        Tile.__init__(self, location)
-
-    def draw(self, screen, game):
-        screen.fill((100,100,100), self.getRectScreen(game))
+    def __init__(self, location, tileTextures):
+        Tile.__init__(self, location, tileTextures.getSeries((0,0),TILESIZE, (0,1)))
 
 class Empty(Tile):
-    def __init__(self, location):
+    def __init__(self, location, tileTextures):
         Tile.__init__(self, location)
 
     def draw(self, screen, game):
@@ -28,12 +25,8 @@ class Empty(Tile):
         return True
 
 class Wall(Tile):
-    def __init__(self, location):
-        Tile.__init__(self, location)
-
-    def draw(self, screen, game):
-        #print(self.getRect(), self.getRectScreen(game), game.getView())
-        screen.fill((0,0,100), self.getRectScreen(game))
+    def __init__(self, location, tileTextures):
+        Tile.__init__(self, location, tileTextures.getSeries((0,0),TILESIZE, (1,1)))
         
     def onCollision(self):
         return True

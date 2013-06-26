@@ -11,7 +11,7 @@ class nSprite(object):
         if self.image == None:
             return self.size
         else:
-            self.image.get_size()
+            return self.image.get_size()
 
     def getRect(self):
         #if self.image == None or self.pos == None:

@@ -15,8 +15,8 @@ class Player(nSprite):
 
         self.weapons = [ WeaponFactory("pistol") ]
 
-    def setFacing(self, mouseCoords):
-        (x1, y1) = self.getRect().center
+    def setFacing(self, mouseCoords, game):
+        (x1, y1) = self.getRectScreen(game).center
         (x2, y2) = mouseCoords
 
         dX = x1 - x2

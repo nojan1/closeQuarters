@@ -55,7 +55,7 @@ class Game(Mode):
             #Player move right
             self.player.move(1,0, self.map)
 
-        self.player.setFacing(mouse.get_pos())
+        self.player.setFacing(mouse.get_pos(), self)
 
         if mouse.get_pressed()[0]:
             #Fire weapon
@@ -75,6 +75,9 @@ class Game(Mode):
                 self.map.mobWasHit(mobHitted, self.player.weapons[0]) 
                 #Add splash animation?
             
+        #Activate mobs / do AI
+        self.map.updateMobs(self)
+
     def handleEvent(self, event, core):
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:

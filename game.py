@@ -40,7 +40,7 @@ class Game(Mode):
 
         self.map.drawMobsInView(screen, self)
 
-    def onPostEventCheck(self, core):
+    def onPostEventCheck(self, core, numTicks):
         states = key.get_pressed()
         if states[K_w]:
             #Player move up
@@ -78,7 +78,7 @@ class Game(Mode):
         #Activate mobs / do AI
         self.map.updateMobs(self)
 
-    def handleEvent(self, event, core):
+    def handleEvent(self, event, core, numTicks):
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 core.revertLastMode()

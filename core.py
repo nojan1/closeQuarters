@@ -49,23 +49,28 @@ class Core(object):
         if self.activeMode == None:
             raise Exception("Critical: No mode set, nothing to do!")
 
+        lastDraw = 0
+        numTicks = 0
         while self.runLoop:
-            self.clock.tick(self.activeMode.fps)
-            
-            self.activeMode.onPreEventCheck(self)
+            numTicks += time.get_ticks()
 
-            for e in event.get():
-                if e.type == QUIT:
-                   if self.activeMode.onQuit():
-                       self.runLoop = False
-                       break
-                else:
-                    self.activeMode.handleEvent(e, self)
-            
-            self.activeMode.onPostEventCheck(self)
-            self.activeMode.onDraw(self.screen, self)
+            if numTicks - lastDraw > (1000.0 / self.activeMode.fps):
+                lastDraw = numTicks
+                self.activeMode.onDraw(self.screen, self)
+                display.update()
+            else:
+                self.activeMode.onPreEventCheck(self, numTicks)
 
-            display.update()
+                for e in event.get():
+                    if e.type == QUIT:
+                        if self.activeMode.onQuit():
+                            self.runLoop = False
+                            break
+                    else:
+                        self.activeMode.handleEvent(e, self, numTicks)
+            
+                self.activeMode.onPostEventCheck(self, numTicks)
+            
 
         #Pygame quit
         quit()

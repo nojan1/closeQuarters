@@ -74,8 +74,7 @@ class Menu(Mode):
         for b in self.menuButtons:
             b.draw(screen, core)
 
-
-    def handleEvent(self, e, core):
+    def handleEvent(self, e, core, numTicks):
         if e.type == KEYDOWN:
             if e.key == K_UP:
                 self.activeButton -= 1

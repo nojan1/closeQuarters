@@ -11,6 +11,8 @@ class HUD(object):
         self.slideImg = image.load(os.path.join(GRAPHICPATH, "slide.png"))
         self.boxImg = image.load(os.path.join(GRAPHICPATH, "electric_textplate.png"))
 
+        self.ammoFont = font.Font(None, 30)
+
     def draw(self, screen, game):
         mainRect = Rect((0,0), self.baseImg.get_size())
         mainRect.x = game.core.res[0] - mainRect.width + 43
@@ -24,9 +26,15 @@ class HUD(object):
         boxRect.move_ip(-1, -510)
 
         weaponRect = Rect(boxRect.topleft, self.player.weapons[0].HUDImage.get_size())
-        weaponRect.move_ip(213,419)
+        weaponRect.move_ip(305,419)
+
+        textSurface = self.ammoFont.render("INF", True, (0,0,0))
+        textRect = textSurface.get_rect()
+        textRect.topleft = weaponRect.topleft
+        textRect.move_ip(-60, 2)
 
         screen.blit(self.boxImg, boxRect)
         screen.blit(self.baseImg, mainRect) 
         screen.blit(self.slideImg, slideRect)
         screen.blit(self.player.weapons[0].HUDImage, weaponRect)
+        screen.blit(textSurface, textRect)

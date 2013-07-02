@@ -16,9 +16,14 @@ class Player(nSprite):
         self.weapons = [ WeaponFactory("pistol") ]
         self.maxHealth = 10.0
         self.health = self.maxHealth
-        self.health = 5.0
 
         self.hasMoved = False
+
+    def takeDamage(self, damage):
+        self.health -= damage
+
+        if self.health < 0:
+            self.health = 0
 
     def setFacing(self, mouseCoords, game):
         (x1, y1) = self.getRectScreen(game).center
@@ -47,7 +52,7 @@ class Player(nSprite):
         yMove *= PLAYERMOVE
         tmpRect.move_ip(xMove, yMove)
 
-        if worldMap.isAllowedPosition(tmpRect):
+        if worldMap.isAllowedPosition(tmpRect) and not worldMap.mobPresent(tmpRect):
             self.pos = tmpRect.topleft
             self.hasMoved = True
     

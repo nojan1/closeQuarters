@@ -54,6 +54,8 @@ class Weapon(object):
         self.bulletClass = Bullet
         self.lastFire = 0
 
+        self.fireSound = None
+
     def isDepleted(self):
         return False
 
@@ -62,6 +64,9 @@ class Weapon(object):
             raise NotImplementedError("ROF is zero = Not proper weapon")
 
         if numTicks - self.lastFire > (1000.0 / self.rof):
+            if self.fireSound != None:
+                self.fireSound.play()
+
             self.lastFire = numTicks
             return self.bulletClass(startPos, angle)
         else:
@@ -73,6 +78,8 @@ class Pistol(Weapon):
         Weapon.__init__(self)
 
         self.HUDImage = image.load(os.path.join(GRAPHICPATH, "pistol.png"))
+        self.fireSound = mixer.Sound(os.path.join(SOUNDPATH, "barreta_m9.wav"))
+        self.fireSound.set_volume(0.8)
 
         self.damage = 1
         self.rof = 1.5

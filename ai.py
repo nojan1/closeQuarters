@@ -29,8 +29,8 @@ class AI(object):
             y = int(math.sin(angle) * increment) + y1
 
             rectToCheck = Rect((x,y), (TILESIZE[0] / 2, TILESIZE[1] / 2))
-            if rectToCheck.collidelist(self.rectCache) != -1:
-                continue
+            #if rectToCheck.collidelist(self.rectCache) != -1:
+             #   continue
 
             if not game.map.isAllowedPosition(rectToCheck):
                 return False

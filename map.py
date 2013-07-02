@@ -36,7 +36,7 @@ class Map(object):
                     x.append(Wall(pos, tileTextures))
                 elif char == "Z":
                     #Mobs to allocate later when the tile grid is complete
-                    mobsToAlloc.append([pos, 2, Zombie, ai])
+                    mobsToAlloc.append([pos, 1, Zombie, ai])
                     
                     #Fill in blank with floor
                     x.append(Floor(pos, tileTextures))
@@ -47,10 +47,10 @@ class Map(object):
 
         self.allocateMobs(mobsToAlloc)
             
-    def updateMobs(self, game):
+    def updateMobs(self, game, tickCount):
         for m in self.mobs:
-            if m.getRect().colliderect(game.getView()):
-                m.onActivation(game)
+            #if m.getRect().colliderect(game.getView()):
+            m.onActivation(game, tickCount)
 
     def drawMobsInView(self, screen, game):
         for m in self.mobs:
@@ -70,7 +70,7 @@ class Map(object):
                     tile.draw(screen, game)
 
     def isAllowedPosition(self, rectToCheck):
-        tile = self.getTileFromPos(rectToCheck.topleft)
+        tile = self.getTileFromPos(rectToCheck.center)
         if tile:
             return not tile.onCollision()
         else:
@@ -90,9 +90,9 @@ class Map(object):
         if mobHitted.takeDamage(weapon.damage):
             self.mobs.remove(mobHitted)
 
-    def mobPresent(self, pos):
+    def mobPresent(self, rect):
         for m in self.mobs:
-            if m.pos == pos:
+            if m.getRect().colliderect(rect):
                 return True
         
         return False
@@ -106,7 +106,7 @@ class Map(object):
 
             for i in range(numMobs):
                 testMob = mobClass(basePos, ai)
-                if self.mobPresent(basePos):
+                if self.mobPresent(testMob.getRect()):
                     #Find new position
                     addedDistance = 0
                     while 1:
@@ -123,7 +123,7 @@ class Map(object):
                             
                             continue
 
-                        if not self.mobPresent(newPos):
+                        if not self.mobPresent(testMob.getRect()):
                             break
 
                 self.mobs.append(testMob)

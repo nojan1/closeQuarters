@@ -5,6 +5,7 @@ import math
 from tile import *
 from config import *
 from zombie import *
+from spider import *
 from textureset import *
 from ai import AI
 
@@ -17,6 +18,8 @@ class Map(object):
         ai = AI()
         self.tiles = []
         mobsToAlloc = []
+
+        mobDict = {"Z": [Zombie, 2], "S": [Spider, 1]}
 
         tileTextures = TextureSet("tiles.png")
 
@@ -34,9 +37,9 @@ class Map(object):
                     x.append(Floor(pos, tileTextures))
                 elif char == "W":
                     x.append(Wall(pos, tileTextures))
-                elif char == "Z":
+                elif char in mobDict:
                     #Mobs to allocate later when the tile grid is complete
-                    mobsToAlloc.append([pos, 1, Zombie, ai])
+                    mobsToAlloc.append([pos, mobDict[char][1], mobDict[char][0], ai])
                     
                     #Fill in blank with floor
                     x.append(Floor(pos, tileTextures))
@@ -52,35 +55,40 @@ class Map(object):
             #if m.getRect().colliderect(game.getView()):
             m.onActivation(game, tickCount)
 
-    def drawMobsInView(self, screen, game):
+    def drawMobsInView(self, screen, game, numTicks):
         for m in self.mobs:
             if m.getRect().colliderect(game.getView()):
-                m.draw(screen, game)
+                m.draw(screen, game, numTicks)
 
     def drawTilesInView(self, screen, game):
         window = game.getView()
-        low = self.getTileCoords(window.topleft)
+        low = self.getTileIndexes(window.topleft)
         
         upperX = (window.width / TILESIZE[0]) + 2 + low[0]
         upperY = (window.height / TILESIZE[1]) + 2 + low[1]
 
+        #Use array slicing to avoid exesive looping
         for y in self.tiles[low[1]:upperY]:
             for tile in y[low[0]:upperX]:
                 if tile != None and tile.getRect().colliderect(game.getView()): # <= This might be redundant
                     tile.draw(screen, game)
 
     def isAllowedPosition(self, rectToCheck):
-        tile = self.getTileFromPos(rectToCheck.center)
-        if tile:
-            return not tile.onCollision()
-        else:
-            return False
+        tileIndexes = self.getTileIndexes(rectToCheck.topleft)
+        
+        for y in range(tileIndexes[1] - 1, tileIndexes[1] + 2):
+            for tile in self.tiles[y][tileIndexes[0] - 1: tileIndexes[0] + 2]:
+                if tile != None and tile.getRect().colliderect(rectToCheck):
+                    if tile.onCollision():
+                        return False
+
+        return True
 
     def getTileFromPos(self, pos):
-        x, y = self.getTileCoords(pos)
+        x, y = self.getTileIndexes(pos)
         return self.get(x, y)
 
-    def getTileCoords(self, pos):
+    def getTileIndexes(self, pos):
         x = int(float(pos[0]) / float(TILESIZE[0]))
         y = int(float(pos[1]) / float(TILESIZE[1]))
         

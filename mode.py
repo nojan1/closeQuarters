@@ -15,5 +15,5 @@ class Mode(object):
     def onComputations(self, core, numTicks):
         pass
 
-    def onDraw(self, screen, core):
+    def onDraw(self, screen, core, numTicks):
         pass

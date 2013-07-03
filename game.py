@@ -6,7 +6,7 @@ from mode import Mode
 from map import Map
 from player import Player
 from hud import *
-from gameover import *
+from gameover import GameOverScreen
 
 class Game(Mode):
     def __init__(self, core):
@@ -39,17 +39,17 @@ class Game(Mode):
         
         return tmp
 
-    def onDraw(self, screen, core):
+    def onDraw(self, screen, core, numTicks):
         screen.fill((0,0,0))
 
         self.map.drawTilesInView(screen, self)
-        self.player.draw(screen, self)
+        self.player.draw(screen, self, numTicks)
 
         #Draw bullets
         for b in self.bullets:
             b.draw(screen, self)
 
-        self.map.drawMobsInView(screen, self)
+        self.map.drawMobsInView(screen, self, numTicks)
 
         self.hud.draw(screen, self)
 

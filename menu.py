@@ -63,7 +63,7 @@ class Menu(Mode):
     def onExitClick(self, core):
         core.pleaseExit()
 
-    def onDraw(self, screen, core):
+    def onDraw(self, screen, core, numTicks):
         fonten = font.Font(None, 40)
         
         screen.fill((0,0,0))

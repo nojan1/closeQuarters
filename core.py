@@ -55,7 +55,7 @@ class Core(object):
             if time.get_ticks() - lastDraw > (1000.0 / self.activeMode.fps):
                 lastDraw = time.get_ticks()
                 self.activeMode.onPreDraw(self, time.get_ticks())
-                self.activeMode.onDraw(self.screen, self)
+                self.activeMode.onDraw(self.screen, self, time.get_ticks())
                 display.update()
             else:
                 for e in event.get():

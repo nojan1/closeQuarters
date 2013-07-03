@@ -1,7 +1,7 @@
 from pygame import *
 
-from mode import *
-from menu import *
+from mode import Mode
+#from menu import Menu
 
 class GameOverScreen(Mode):
     def __init__(self, game):
@@ -10,7 +10,7 @@ class GameOverScreen(Mode):
 
         self.lastScreen = game.core.screen
 
-    def onDraw(self, screen, core):
+    def onDraw(self, screen, core, numTicks):
         screen.blit(self.lastScreen, (0,0))
         
         screen.fill((100,100,100,100), Rect(300,40,424,668))

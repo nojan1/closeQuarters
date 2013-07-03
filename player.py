@@ -57,7 +57,7 @@ class Player(nSprite):
             self.hasMoved = True
     
 
-    def draw(self, screen, game):
+    def draw(self, screen, game, numTicks = 0):
         rectScreen = self.getRectScreen(game)
         #Draw targeter, circle
         draw.circle(screen, (0,255,0), rectScreen.center, rectScreen.width, 1) 

@@ -1,11 +1,11 @@
-from sprite import *
+from animsprite import *
 from config import *
 import math
 import random
 
-class Zombie(nSprite):
+class Zombie(AnimSprite):
     def __init__(self, pos, ai):
-        nSprite.__init__(self)
+        AnimSprite.__init__(self)
         self.pos = pos
         self.size = (25,25)
 
@@ -14,7 +14,7 @@ class Zombie(nSprite):
         self.hasActivated = False
         self.lastAttack = 0
         
-    def draw(self, screen, game):
+    def draw(self, screen, game, numTicks = 0):
         rectScreen = self.getRectScreen(game)
 
         #Draw mob

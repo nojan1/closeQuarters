@@ -18,7 +18,7 @@ class Empty(Tile):
     def __init__(self, location, tileTextures):
         Tile.__init__(self, location)
 
-    def draw(self, screen, game):
+    def draw(self, screen, game, numTicks = 0):
         pass
         
     def onCollision(self):

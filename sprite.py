@@ -28,7 +28,7 @@ class nSprite(object):
         rect.x, rect.y = worldToScreen(rect.topleft, game.getView())
         return rect
 
-    def draw(self, screen, game):
+    def draw(self, screen, game, numTicks = 0):
         if self.image == None:
             print("Warning: Attempting to draw sprite without image")
             return

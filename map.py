@@ -19,7 +19,7 @@ class Map(object):
         self.tiles = []
         mobsToAlloc = []
 
-        mobDict = {"Z": [Zombie, 2], "S": [Spider, 1]}
+        mobDict = {"Z": [Zombie, 1], "S": [Spider, 1]}
 
         tileTextures = TextureSet("tiles.png")
 

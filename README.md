@@ -7,6 +7,7 @@ Shoot zombies and be happy!
 
 Textures from: http://www.sharecg.com,
 HUD => http://www.sharecg.com/v/14458/browse/6/Texture/health-H.U.D.01
+RIFLE => http://cdn.obsidianportal.com/images/692256/830px-Chinese_assault_rifle_thumb_48.png
 
 Pistol sound => http://soundbible.com/1906-Barreta-M9.html
 Footsteps => http://soundbible.com/2057-Footsteps-On-Cement.html

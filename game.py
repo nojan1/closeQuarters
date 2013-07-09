@@ -44,7 +44,6 @@ class Game(Mode):
         print("Got map change request, new ID=%i" % newMapID)
         self.activeMap = newMapID
         self.player.pos = self.getMap().playerPosCache
-        print("Player was moved to;", self.player.pos)
 
     def getView(self):
         tmp = Rect((0, 0), tuple(self.core.res))

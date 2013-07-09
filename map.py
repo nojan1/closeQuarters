@@ -8,6 +8,8 @@ from zombie import *
 from spider import *
 from textureset import *
 from ai import AI
+from pickup import *
+from weapon import WeaponFactory
 
 class Map(object):
     def __init__(self, levelID, game):
@@ -57,10 +59,14 @@ class Map(object):
                 elif char == "-":
                     x.append( MapChange(pos, tileTextures, levelID - 1) )
                              
+                #Add pickups
+                elif char == "R":
+                    x.append( WeaponPickup(pos, tileTextures, WeaponFactory("autorifle")) )
+
                 #Add mobs map
                 elif char in mobDict:
                     #Mobs to allocate later when the tile grid is complete
-                    #mobsToAlloc.append([pos, mobDict[char][1], mobDict[char][0], ai])
+                    mobsToAlloc.append([pos, mobDict[char][1], mobDict[char][0], ai])
                     
                     #Fill in blank with floor
                     x.append(Floor(pos, tileTextures))

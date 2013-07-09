@@ -56,6 +56,9 @@ class Weapon(object):
 
         self.fireSound = None
 
+    def getHUDText(self):
+        return ""
+        
     def isDepleted(self):
         return False
 
@@ -84,8 +87,31 @@ class Pistol(Weapon):
         self.damage = 1
         self.rof = 1.5
 
-class AutoRifle(Weapon):
-    pass
+    def getHUDText(self):
+        return "INF"
+
+class AutoRifle(Pistol):
+    def __init__(self):
+        Pistol.__init__(self)
+
+        self.HUDImage = image.load(os.path.join(GRAPHICPATH, "rifle.png"))
+        self.groundImage = image.load(os.path.join(GRAPHICPATH, "rifle_ground.png"))
+
+        self.rof = 8
+        self.shotsRemaining = 100
+
+    def fire(self, startPos, angle, numTicks):
+        retVal = Pistol.fire(self, startPos, angle, numTicks)
+        if retVal != None:
+            self.shotsRemaining -= 1
+            
+        return retVal
+
+    def isDepleted(self):
+        return self.shotsRemaining <= 0 
+
+    def getHUDText(self):
+        return str(self.shotsRemaining)
 
 class Laser(Weapon):
     pass

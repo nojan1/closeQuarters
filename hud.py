@@ -28,7 +28,7 @@ class HUD(object):
         weaponRect = Rect(boxRect.topleft, self.player.weapons[0].HUDImage.get_size())
         weaponRect.move_ip(305,419)
 
-        textSurface = self.ammoFont.render("INF", True, (0,0,0))
+        textSurface = self.ammoFont.render(self.player.weapons[0].getHUDText(), True, (0,0,0))
         textRect = textSurface.get_rect()
         textRect.topleft = weaponRect.topleft
         textRect.move_ip(-60, 2)

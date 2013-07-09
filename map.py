@@ -10,9 +10,15 @@ from textureset import *
 from ai import AI
 
 class Map(object):
-    def __init__(self):
+    def __init__(self, levelID, game):
         self.tiles = None
         self.mobs = []
+
+        self.game = game
+        self.playerPosCache = None
+        
+        self.levelID = levelID
+        self.loadLevel(levelID)
 
     def loadLevel(self, levelID):
         ai = AI()
@@ -37,9 +43,24 @@ class Map(object):
                     x.append(Floor(pos, tileTextures))
                 elif char == "W":
                     x.append(Wall(pos, tileTextures))
+
+                #Store this position as the player saved position
+                elif char == "P":
+                    self.playerPosCache = (xPos * TILESIZE[0], yPos * TILESIZE[1])
+
+                    #Fill in blank with floor
+                    x.append(Floor(pos, tileTextures))
+
+                #Handle level change
+                elif char == "+":
+                    x.append( MapChange(pos, tileTextures, levelID + 1) )
+                elif char == "-":
+                    x.append( MapChange(pos, tileTextures, levelID - 1) )
+                             
+                #Add mobs map
                 elif char in mobDict:
                     #Mobs to allocate later when the tile grid is complete
-                    mobsToAlloc.append([pos, mobDict[char][1], mobDict[char][0], ai])
+                    #mobsToAlloc.append([pos, mobDict[char][1], mobDict[char][0], ai])
                     
                     #Fill in blank with floor
                     x.append(Floor(pos, tileTextures))
@@ -79,7 +100,7 @@ class Map(object):
         for y in range(tileIndexes[1] - 1, tileIndexes[1] + 2):
             for tile in self.tiles[y][tileIndexes[0] - 1: tileIndexes[0] + 2]:
                 if tile != None and tile.getRect().colliderect(rectToCheck):
-                    if tile.onCollision():
+                    if tile.onCollision(self.game):
                         return False
 
         return True
@@ -135,7 +156,6 @@ class Map(object):
                             break
 
                 self.mobs.append(testMob)
-
                 
 
     def get(self, x, y):

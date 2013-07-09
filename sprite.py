@@ -39,5 +39,5 @@ class nSprite(object):
 
         screen.blit(self.image, self.getRectScreen(game))
 
-    def onCollision(self):
+    def onCollision(self, game):
         return False

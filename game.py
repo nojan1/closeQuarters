@@ -12,11 +12,12 @@ class Game(Mode):
     def __init__(self, core):
         Mode.__init__(self, core, 50)
 
-        self.map = Map()
-        self.map.loadLevel(1)
-
         self.player = Player((200,200))
         self.hud = HUD(self.player)
+
+        self.maps = []
+        self.activeMap = None
+        self.changeMap(0)
 
         self.zombiePain = mixer.Sound(os.path.join(SOUNDPATH, "zombie_pain.wav"))
         self.playerHitSounds = [ mixer.Sound(os.path.join(SOUNDPATH, "punch.wav")), mixer.Sound(os.path.join(SOUNDPATH, "bite.wav")) ]
@@ -25,6 +26,25 @@ class Game(Mode):
         self.footstepsPlaying = False
 
         self.bullets = []
+
+    def getMap(self):
+        return self.maps[self.activeMap]
+
+    def changeMap(self, newMapID):
+        if newMapID < 0:
+            print("Error: Level below zero is undefined!")
+            return
+
+        if newMapID > len(self.maps) - 1:
+            self.maps.append( Map(newMapID, self) )
+
+        if self.activeMap != None:
+            self.maps[self.activeMap].playerPosCache = self.player.pos
+
+        print("Got map change request, new ID=%i" % newMapID)
+        self.activeMap = newMapID
+        self.player.pos = self.getMap().playerPosCache
+        print("Player was moved to;", self.player.pos)
 
     def getView(self):
         tmp = Rect((0, 0), tuple(self.core.res))
@@ -42,14 +62,14 @@ class Game(Mode):
     def onDraw(self, screen, core, numTicks):
         screen.fill((0,0,0))
 
-        self.map.drawTilesInView(screen, self)
+        self.getMap().drawTilesInView(screen, self)
         self.player.draw(screen, self, numTicks)
 
         #Draw bullets
         for b in self.bullets:
             b.draw(screen, self)
 
-        self.map.drawMobsInView(screen, self, numTicks)
+        self.getMap().drawMobsInView(screen, self, numTicks)
 
         self.hud.draw(screen, self)
 
@@ -91,22 +111,22 @@ class Game(Mode):
                 self.footsteps.play()
                 self.footstepsPlaying = True
 
-        self.player.move(mX, mY, self.map)
+        self.player.move(mX, mY, self.getMap())
 
         #Activate mobs / do AI
-        self.map.updateMobs(self, numTicks)
+        self.getMap().updateMobs(self, numTicks)
 
         for b in self.bullets:
             b.move()
-            if b.hitWall(self.map):
+            if b.hitWall(self.getMap()):
                 self.bullets.remove(b)
                 continue
 
-            mobHitted = b.hitMob(self.map)
+            mobHitted = b.hitMob(self.getMap())
             if not mobHitted == False:
                 self.bullets.remove(b)
                 self.zombiePain.play()
-                self.map.mobWasHit(mobHitted, self.player.weapons[0]) 
+                self.getMap().mobWasHit(mobHitted, self.player.weapons[0]) 
                 #Add splash animation?
 
         self.player.setFacing(mouse.get_pos(), self)

@@ -4,10 +4,6 @@ from pygame import Rect
 from config import *
 
 class AI(object):
-    def __init__(self):
-        #Used to speed up calculations on the expense of memory...
-        self.rectCache = []
-
     def canSeePlayer(self, mob, game):
         return self.isClearLine(mob.getRect().center, game.player.getRect().center, game, False)
 
@@ -37,13 +33,9 @@ class AI(object):
             y = int(math.sin(angle) * increment) + y1
 
             rectToCheck = Rect((x,y), (TILESIZE[0] / 2, TILESIZE[1] / 2))
-            #if rectToCheck.collidelist(self.rectCache) != -1:
-             #   continue
 
-            if (not game.map.isAllowedPosition(rectToCheck)) or (mobsBlockLOS and game.map.mobPresent(rectToCheck)):
+            if (not game.getMap().isAllowedPosition(rectToCheck)) or (mobsBlockLOS and game.getMap().mobPresent(rectToCheck)):
                 return False
-            else:
-                self.rectCache.append(rectToCheck)
                 
         return (angle, distance)
 

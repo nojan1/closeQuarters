@@ -62,6 +62,8 @@ class Map(object):
                 #Add pickups
                 elif char == "R":
                     x.append( WeaponPickup(pos, tileTextures, WeaponFactory("autorifle")) )
+                elif char == "H":
+                    x.append( HealthPickup(pos, tileTextures) )
 
                 #Add mobs map
                 elif char in mobDict:

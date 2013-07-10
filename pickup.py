@@ -1,5 +1,9 @@
 from tile import Floor
 from weapon import *
+from config import *
+
+from pygame import image
+import os
 
 class Pickup(Floor):
     def __init__(self, location, tileTextures, groundImage):
@@ -32,5 +36,18 @@ class WeaponPickup(Pickup):
 
     def onPickup(self, game):
         game.player.weapons.insert(0, self.weaponObj)
+        self.used = True
+        return False
+
+class HealthPickup(Pickup):
+    def __init__(self, location, tileTextures):
+         groundImage = image.load(os.path.join(GRAPHICPATH, "health_pickup.png"))
+         Pickup.__init__(self, location, tileTextures, groundImage)
+
+    def onPickup(self, game):
+        game.player.health += 25
+        if game.player.health > 100:
+            game.player.health = 100
+
         self.used = True
         return False

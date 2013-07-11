@@ -21,14 +21,14 @@ class Empty(Tile):
     def draw(self, screen, game, numTicks = 0):
         pass
         
-    def onCollision(self, game):
+    def onCollision(self, game, isPlayer):
         return True
 
 class Wall(Tile):
     def __init__(self, location, tileTextures):
         Tile.__init__(self, location, tileTextures.getSeries((0,0),TILESIZE, (1,1)))
         
-    def onCollision(self, game):
+    def onCollision(self, game, isPlayer):
         return True
 
 class MapChange(Floor):
@@ -36,6 +36,8 @@ class MapChange(Floor):
         Floor.__init__(self, location, tileTextures)
         self.mapID = newMapID
 
-    def onCollision(self, game):
-        game.changeMap(self.mapID)
+    def onCollision(self, game, isPlayer):
+        if isPlayer:
+            game.changeMap(self.mapID)
+
         return True

@@ -19,8 +19,8 @@ class Pickup(Floor):
             #Draw the pickup image on top of tile image
             screen.blit(self.groundImage, self.getRectScreen(game))
 
-    def onCollision(self, game):
-        if self.used:
+    def onCollision(self, game, isPlayer):
+        if not isPlayer or self.used:
             return False
 
         return self.onPickup(game)

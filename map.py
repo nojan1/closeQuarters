@@ -77,7 +77,7 @@ class Map(object):
 
             self.tiles.append(x)
 
-        #self.allocateMobs(mobsToAlloc)
+        self.allocateMobs(mobsToAlloc)
             
     def updateMobs(self, game, tickCount):
         for m in self.mobs:
@@ -102,7 +102,7 @@ class Map(object):
                 if tile != None and tile.getRect().colliderect(game.getView()): # <= This might be redundant
                     tile.draw(screen, game)
 
-    def isAllowedPosition(self, rectToCheck):
+    def isAllowedPosition(self, rectToCheck, isPlayer = False):
         tileIndexes = self.getTileIndexes(rectToCheck.center)
 
         #Limit indexes to avoid out of band errors
@@ -125,7 +125,7 @@ class Map(object):
         for y in range(lowerY, upperY):
             for tile in self.tiles[y][lowerX: upperX]:
                 if tile != None and tile.getRect().colliderect(rectToCheck):
-                    if tile.onCollision(self.game):
+                    if tile.onCollision(self.game, isPlayer):
                         return False
 
         return True

@@ -52,7 +52,7 @@ class Player(nSprite):
         yMove *= PLAYERMOVE
         tmpRect.move_ip(xMove, yMove)
 
-        if worldMap.isAllowedPosition(tmpRect) and not worldMap.mobPresent(tmpRect):
+        if worldMap.isAllowedPosition(tmpRect, True) and not worldMap.mobPresent(tmpRect):
             self.pos = tmpRect.topleft
             self.hasMoved = True
     

@@ -1,14 +1,18 @@
 from pygame import *
 import os
+import math
 
 from config import *
 
 class TextureSet(object):
     def __init__(self, imagename, colorkey=None):
-        self.image = image.load(os.path.join(GRAPHICPATH, imagename)).convert()
+        self.image = image.load(os.path.join(GRAPHICPATH, imagename))
 
         if colorkey != None:
+            self.image = self.image.convert()
             self.image.set_colorkey(colorkey)
+        else:
+            self.image = self.image.convert_alpha()
 
         self.rotationCache = {}
 
@@ -21,13 +25,14 @@ class TextureSet(object):
         return self.getSingle(newOffset, size)
         
     def getSingleRotated(self, offset, size, angle):
+        angle = math.degrees(angle)
         searchKey = str(offset) + str(size) + str(angle)
 
         if searchKey in self.rotationCache:
             return self.rotationCache[searchKey]
         else:
             image = self.getSingle(offset, size)
-            transform.rotate(image, angle)
+            image = transform.rotate(image, angle)
             self.rotationCache[searchKey] = image
             return image
 

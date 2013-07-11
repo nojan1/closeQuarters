@@ -4,12 +4,15 @@ import math
 from weapon import *
 from config import *
 from sprite import *
+from textureset import *
 
 class Player(nSprite):
     def __init__(self, pos):
         nSprite.__init__(self)
         self.pos = pos
-        self.size = (30,30)
+        self.size = (32,32)
+
+        self.textures = TextureSet("player.png", (0,64,128))
 
         self.facingAngle = 0
 
@@ -72,7 +75,9 @@ class Player(nSprite):
         draw.aaline(screen, (0,255,0), (x1, y1), (x2, y2), 1)
 
         #Draw character
-        screen.fill((255,0,0), rectScreen)
+        #screen.fill((255,0,0), rectScreen)
+        self.image = self.textures.getSeriesRotated((0,0), self.size, (0,0), (self.facingAngle + 1.57) * -1)
+        nSprite.draw(self, screen, game)
         self.hasMoved = False
 
         

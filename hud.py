@@ -7,9 +7,9 @@ class HUD(object):
     def __init__(self, player):
         self.player = player
 
-        self.baseImg = image.load(os.path.join(GRAPHICPATH, "main_section.png"))
-        self.slideImg = image.load(os.path.join(GRAPHICPATH, "slide.png"))
-        self.boxImg = image.load(os.path.join(GRAPHICPATH, "electric_textplate.png"))
+        self.baseImg = image.load(os.path.join(GRAPHICPATH, "main_section.png")).convert_alpha()
+        self.slideImg = image.load(os.path.join(GRAPHICPATH, "slide.png")).convert_alpha()
+        self.boxImg = image.load(os.path.join(GRAPHICPATH, "electric_textplate.png")).convert_alpha()
 
         self.ammoFont = font.Font(None, 30)
 

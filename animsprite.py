@@ -25,7 +25,7 @@ class AnimSprite(nSprite):
         self.image = self.textures.getSeries(self.textureOffset, self.size, self.imageIndexes[1][self.animIndex])
 
     def draw(self, screen, game, numTicks):
-        if self.animEnabled:
+        if self.animEnable:
             if numTicks - self.animLast > self.animKey:
                 self.animLast = numTicks
                 self.nextImage()

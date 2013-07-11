@@ -2,6 +2,8 @@ from pygame import *
 from config import *
 from sprite import *
 
+import random
+
 class Tile(nSprite):
     def __init__(self, location, image = None):
         nSprite.__init__(self)
@@ -12,7 +14,7 @@ class Tile(nSprite):
 
 class Floor(Tile):
     def __init__(self, location, tileTextures):
-        Tile.__init__(self, location, tileTextures.getSeries((0,0),TILESIZE, (0,1)))
+        Tile.__init__(self, location, tileTextures.getSeries((0,0),TILESIZE, (random.randint(29, 33), 13)))
 
 class Empty(Tile):
     def __init__(self, location, tileTextures):
@@ -26,7 +28,7 @@ class Empty(Tile):
 
 class Wall(Tile):
     def __init__(self, location, tileTextures):
-        Tile.__init__(self, location, tileTextures.getSeries((0,0),TILESIZE, (1,1)))
+        Tile.__init__(self, location, tileTextures.getSeries((0,0),TILESIZE, (random.randint(8, 15), 16)))
         
     def onCollision(self, game, isPlayer):
         return True

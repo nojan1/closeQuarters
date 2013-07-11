@@ -2,7 +2,7 @@ GRAPHICPATH="./images"
 SOUNDPATH="./sounds"
 LEVELPATH="./levels"
 
-TILESIZE=(30,30)
+TILESIZE=(32,32)
 
 PLAYERMOVE=5
 

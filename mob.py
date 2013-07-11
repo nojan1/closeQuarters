@@ -45,4 +45,5 @@ class Mob(AnimSprite):
                     self.pos = (newX, newY)
         else:
             self.hasSeenPlayer = self.ai.canSeePlayer(self, game) != False
+            self.animEnable = True
      

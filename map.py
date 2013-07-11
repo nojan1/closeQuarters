@@ -27,9 +27,10 @@ class Map(object):
         self.tiles = []
         mobsToAlloc = []
 
-        mobDict = {"Z": [Zombie, 1], "S": [Spider, 1]}
+        tileTextures = TextureSet("dungeon_crawl.png")
+        zombieTextures = TextureSet("zombie_topdown.png")
 
-        tileTextures = TextureSet("tiles.png")
+        mobDict = {"Z": [Zombie, 1, zombieTextures], "S": [Spider, 1, None]}
 
         path = os.path.join(LEVELPATH, str(levelID)+".lvl")
         if not os.path.exists(path):
@@ -68,7 +69,7 @@ class Map(object):
                 #Add mobs map
                 elif char in mobDict:
                     #Mobs to allocate later when the tile grid is complete
-                    mobsToAlloc.append([pos, mobDict[char][1], mobDict[char][0], ai])
+                    mobsToAlloc.append([pos, mobDict[char][1], mobDict[char][0], mobDict[char][2], ai])
                     
                     #Fill in blank with floor
                     x.append(Floor(pos, tileTextures))
@@ -152,21 +153,21 @@ class Map(object):
         return False
 
     def allocateMobs(self, mobsToAlloc):
-        for (tileCoords, numMobs, mobClass, ai) in mobsToAlloc: 
+        for (tileCoords, numMobs, mobClass, mobTextures, ai) in mobsToAlloc: 
             basePos = (tileCoords[0] * TILESIZE[0], tileCoords[1] * TILESIZE[1])
 
             posDirs = [(0,-1), (1,0), (0,1), (-1,0)]
             random.shuffle(posDirs)
 
             for i in range(numMobs):
-                testMob = mobClass(basePos, ai)
+                testMob = mobClass(basePos, ai, mobTextures)
                 if self.mobPresent(testMob.getRect()):
                     #Find new position
                     addedDistance = 0
                     while 1:
                         addedDistance += testMob.getRect().width
                         newPos = (basePos[0] + (posDirs[0][0] * addedDistance), basePos[1] + (posDirs[0][1] * addedDistance))
-                        testMob = mobClass(newPos, ai)
+                        testMob = mobClass(newPos, ai, mobTextures)
                 
                         if not self.isAllowedPosition(testMob.getRect()):
                             posDirs.pop(0)

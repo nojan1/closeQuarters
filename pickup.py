@@ -45,9 +45,9 @@ class HealthPickup(Pickup):
          Pickup.__init__(self, location, tileTextures, groundImage)
 
     def onPickup(self, game):
-        game.player.health += 25
-        if game.player.health > 100:
-            game.player.health = 100
+        game.player.health += 2.5
+        if game.player.health > game.player.maxHealth:
+            game.player.health = game.player.maxHealth
 
         self.used = True
         return False

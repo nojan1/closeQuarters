@@ -77,7 +77,7 @@ class Map(object):
 
             self.tiles.append(x)
 
-        self.allocateMobs(mobsToAlloc)
+        #self.allocateMobs(mobsToAlloc)
             
     def updateMobs(self, game, tickCount):
         for m in self.mobs:
@@ -103,10 +103,27 @@ class Map(object):
                     tile.draw(screen, game)
 
     def isAllowedPosition(self, rectToCheck):
-        tileIndexes = self.getTileIndexes(rectToCheck.topleft)
-        
-        for y in range(tileIndexes[1] - 1, tileIndexes[1] + 2):
-            for tile in self.tiles[y][tileIndexes[0] - 1: tileIndexes[0] + 2]:
+        tileIndexes = self.getTileIndexes(rectToCheck.center)
+
+        #Limit indexes to avoid out of band errors
+        upperY = tileIndexes[1] + 2
+        if upperY > len(self.tiles) - 1:
+            upperY = len(self.tiles) - 1
+
+        lowerY = tileIndexes[1] - 1
+        if lowerY < 0:
+            lowerY = 0
+
+        upperX = tileIndexes[0] + 2
+        if upperX > len(self.tiles[ upperY ]) - 1:
+            upperX = len(self.tiles[ upperY ]) - 1
+            
+        lowerX = tileIndexes[0] - 1
+        if lowerX < 0:
+            lowerX = 0
+  
+        for y in range(lowerY, upperY):
+            for tile in self.tiles[y][lowerX: upperX]:
                 if tile != None and tile.getRect().colliderect(rectToCheck):
                     if tile.onCollision(self.game):
                         return False

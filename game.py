@@ -2,6 +2,7 @@ from pygame import *
 import os
 import random
 
+from backgroundmusic import *
 from mode import Mode
 from map import Map
 from player import Player
@@ -14,6 +15,9 @@ class Game(Mode):
 
         self.player = Player((200,200))
         self.hud = HUD(self.player)
+
+        self.music = BackgroundMusic()
+        self.music.playTrack()
 
         self.maps = []
         self.activeMap = None
@@ -136,7 +140,13 @@ class Game(Mode):
             if ret != None:
                 self.bullets.append(ret)
 
+    def onSwitchIn(self, core):
+        self.music.unpause()
+
     def handleEvent(self, event, core, numTicks):
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
+                self.music.pause()
                 core.revertLastMode()
+        elif event.type == USEREVENT:
+            self.music.playTrack()

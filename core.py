@@ -13,17 +13,23 @@ class Core(object):
         self.clock = None
 
     def setActiveMode(self, newMode, discard=False):
+        if self.activeMode != None:
+            self.activeMode.onSwitchOut(self)
+
         if not discard:
             self.lastMode = self.activeMode
         
+        newMode.onSwitchIn(self)
         self.activeMode = newMode
 
     def revertLastMode(self):
         if self.lastMode == None:
             return None
 
+        self.activeMode.onSwitchOut(self)
         tmp = self.activeMode
         self.activeMode = self.lastMode
+        self.activeMode.onSwitchIn(self)
         self.lastMode = tmp
 
         return tmp

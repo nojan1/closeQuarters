@@ -9,6 +9,12 @@ class Mode(object):
     def onQuit(self):
         return True
 
+    def onSwitchOut(self, core):
+        pass
+
+    def onSwitchIn(self, core):
+        pass
+
     def onPreDraw(self, core, numTicks):
         pass
 

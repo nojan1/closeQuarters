@@ -17,3 +17,9 @@ Punch sound => http://soundbible.com/2069-Realistic-Punch.html
 Zombie Pain => http://soundbible.com/1033-Zombie-In-Pain.html
 Bite sound => http://soundbible.com/950-Bite.html
 Pain => http://soundbible.com/1454-Pain.html
+
+
+Music => http://ericskiff.com/music/
+         http://opengameart.org/content/radakan-mist-forest
+         http://opengameart.org/content/cold-silence
+         http://opengameart.org/content/endgame-singularity

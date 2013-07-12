@@ -38,7 +38,7 @@ class Map(object):
 
         for yPos,line in enumerate(open(path, "r")):
             x = []
-            for xPos, char in enumerate(line.strip()):
+            for xPos, char in enumerate(line.strip().upper()):
                 pos = (xPos, yPos)
                 if char == "." or char == " ":
                     x.append(Empty(pos, tileTextures))

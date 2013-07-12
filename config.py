@@ -1,5 +1,6 @@
 GRAPHICPATH="./images"
 SOUNDPATH="./sounds"
+MUSICPATH="./sounds/music"
 LEVELPATH="./levels"
 
 TILESIZE=(32,32)

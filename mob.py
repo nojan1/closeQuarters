@@ -30,6 +30,7 @@ class Mob(AnimSprite):
 
         self.hasActivated = True
         if self.hasSeenPlayer:
+            self.animEnable = True
             #Find path and attack!
             path = self.ai.findPath(self, game)
             if path:
@@ -45,5 +46,4 @@ class Mob(AnimSprite):
                     self.pos = (newX, newY)
         else:
             self.hasSeenPlayer = self.ai.canSeePlayer(self, game) != False
-            self.animEnable = True
      

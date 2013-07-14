@@ -62,13 +62,13 @@ class Weapon(object):
     def isDepleted(self):
         return False
 
-    def fire(self, startPos, angle, numTicks):
+    def fire(self, startPos, angle, numTicks, channel):
         if self.rof == 0:
             raise NotImplementedError("ROF is zero = Not proper weapon")
 
         if numTicks - self.lastFire > (1000.0 / self.rof):
             if self.fireSound != None:
-                self.fireSound.play()
+                channel.play(self.fireSound)
 
             self.lastFire = numTicks
             return self.bulletClass(startPos, angle)
@@ -100,8 +100,8 @@ class AutoRifle(Pistol):
         self.rof = 8
         self.shotsRemaining = 100
 
-    def fire(self, startPos, angle, numTicks):
-        retVal = Pistol.fire(self, startPos, angle, numTicks)
+    def fire(self, startPos, angle, numTicks, channel):
+        retVal = Pistol.fire(self, startPos, angle, numTicks, channel)
         if retVal != None:
             self.shotsRemaining -= 1
             

@@ -8,6 +8,8 @@ from map import Map
 from player import Player
 from hud import *
 from gameover import GameOverScreen
+from splatter import *
+from textureset import *
 
 class Game(Mode):
     def __init__(self, core):
@@ -30,6 +32,8 @@ class Game(Mode):
         self.footstepsPlaying = False
 
         self.bullets = []
+        self.splatters = []
+        self.splatterTextures = TextureSet("sparks.png")
 
     def getMap(self):
         return self.maps[self.activeMap]
@@ -73,6 +77,10 @@ class Game(Mode):
             b.draw(screen, self)
 
         self.getMap().drawMobsInView(screen, self, numTicks)
+
+        #Draw blood splatters
+        for s in self.splatters:
+            s.draw(screen, self, numTicks)
 
         self.hud.draw(screen, self)
 
@@ -119,6 +127,11 @@ class Game(Mode):
         #Activate mobs / do AI
         self.getMap().updateMobs(self, numTicks)
 
+        #Check for dead splatters
+        for s in self.splatters:
+            if s.isDead():
+                self.splatters.remove(s)
+
         for b in self.bullets:
             b.move()
             if b.hitWall(self.getMap()):
@@ -130,7 +143,9 @@ class Game(Mode):
                 self.bullets.remove(b)
                 self.zombiePain.play()
                 self.getMap().mobWasHit(mobHitted, self.player.weapons[0]) 
-                #Add splash animation?
+                
+                #Add splash animation
+                self.splatters.append( Splatter(mobHitted.pos, self.splatterTextures) )
 
         self.player.setFacing(mouse.get_pos(), self)
 

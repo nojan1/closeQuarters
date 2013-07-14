@@ -10,6 +10,7 @@ HUD => http://www.sharecg.com/v/14458/browse/6/Texture/health-H.U.D.01
 RIFLE => http://cdn.obsidianportal.com/images/692256/830px-Chinese_assault_rifle_thumb_48.png
 Zombie texture => http://opengameart.org/content/zombie-sprites
 Tiles and more => http://opengameart.org/content/dungeon-crawl-32x32-tiles
+Blood Splatter => http://opengameart.org/content/sparks-fire-ice-blood
 
 Pistol sound => http://soundbible.com/1906-Barreta-M9.html
 Footsteps => http://soundbible.com/2057-Footsteps-On-Cement.html

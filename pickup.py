@@ -2,7 +2,7 @@ from tile import Floor
 from weapon import *
 from config import *
 
-from pygame import image
+from pygame import image, draw
 import os
 
 class Pickup(Floor):
@@ -17,7 +17,9 @@ class Pickup(Floor):
         
         if not self.used:
             #Draw the pickup image on top of tile image
-            screen.blit(self.groundImage, self.getRectScreen(game))
+            rect = self.getRectScreen(game)
+            screen.blit(self.groundImage, rect)
+            draw.circle(screen, (0, 0, 150), rect.center, int(rect.width * 0.6), 1) 
 
     def onCollision(self, game, isPlayer):
         if not isPlayer or self.used:

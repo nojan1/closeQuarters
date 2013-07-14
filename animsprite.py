@@ -16,11 +16,13 @@ class AnimSprite(nSprite):
         self.animIndex = 0
         self.animKey = 0
         self.animLast = 0
+        self.animHasRestarted = False
 
     def nextImage(self):
         self.animIndex += 1
         if self.animIndex > len(self.imageIndexes) - 1:
             self.animIndex = 0
+            self.animHasRestarted = True
 
         self.image = self.textures.getSeries(self.textureOffset, self.size, self.imageIndexes[1][self.animIndex])
 

@@ -17,6 +17,7 @@ class Player(nSprite):
         self.facingAngle = 0
 
         self.weapons = [ WeaponFactory("pistol") ]
+        self.fireChannel = mixer.Channel(5)
         self.maxHealth = 10.0
         self.health = self.maxHealth
 
@@ -38,7 +39,7 @@ class Player(nSprite):
         self.facingAngle = math.atan2(dY * -1, dX * -1)
 
     def fireWeapon(self, numTicks):
-        retVal = self.weapons[0].fire(self.getRect().center, self.facingAngle, numTicks)
+        retVal = self.weapons[0].fire(self.getRect().center, self.facingAngle, numTicks, self.fireChannel)
         
         if self.weapons[0].isDepleted():
             self.weapons.pop(0)

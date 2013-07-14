@@ -30,7 +30,7 @@ class Map(object):
         tileTextures = TextureSet("dungeon_crawl.png")
         zombieTextures = TextureSet("zombie_topdown.png")
 
-        mobDict = {"Z": [Zombie, 1, zombieTextures], "S": [Spider, 1, None]}
+        mobDict = {"Z": [Zombie, 2, zombieTextures], "S": [Spider, 1, None]}
 
         path = os.path.join(LEVELPATH, str(levelID)+".lvl")
         if not os.path.exists(path):

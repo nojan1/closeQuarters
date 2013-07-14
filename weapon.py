@@ -114,4 +114,59 @@ class AutoRifle(Pistol):
         return str(self.shotsRemaining)
 
 class Laser(Weapon):
-    pass
+    def __init__(self):
+        Weapon.__init__(self)
+
+        self.bulletClass = LaserBullet
+
+        self.HUDImage = image.load(os.path.join(GRAPHICPATH, "rifle.png"))
+        self.groundImage = image.load(os.path.join(GRAPHICPATH, "LaserGun.gif"))
+
+        self.fireSound = mixer.Sound(os.path.join(SOUNDPATH, "laser.wav"))
+        self.fireSound.set_volume(0.8)
+
+        self.damage = 2
+        self.rof = 1
+
+        self.stressLevel = 0
+
+    def fire(self, startPos, angle, numTicks, channel):
+        if not Weapon.fire(self, startPos, angle, numTicks, channel):
+            return
+
+        #To much firing overheats weapon
+        if numTicks - self.lastFire < LASERTHRESHOLD:
+            self.stressLevel += 1
+        else:
+            self.stressLevel -= 1
+
+        #Make sure the value is between limits
+        if self.stressLevel < 0:
+            self.stressLevel = 0
+        elif self.stressLevel > 4:
+            self.stressLevel = 4
+
+    def getHUDText(self):
+        labels = ["COLD", "OKEY", "HOT", "BURN", "OVER"]
+        return labels[self.stressLevel]
+
+    def isDepleted(self):
+        return self.stressLevel == 4
+
+class LaserBullet(Bullet):
+    def __init__(self, pos, angle, speed = 10):
+        Bullet.__init__(self, pos, angle, speed)
+
+    def draw(self, screen, game):
+        self.hasMoved = False
+
+        pos = worldToScreen(self.pos, game.getView())
+
+        x1 = math.cos(self.angle) * -5 + pos[0] 
+        y1 = math.cos(self.angle) * -5 + pos[1]
+
+        x2 = math.cos(self.angle) * 3 + pos[0]
+        y2 = math.sin(self.angle) * 3 + pos[1]
+
+        draw.line(screen, (200,0,0), (x1, y1), (x2, y2), 1)
+        

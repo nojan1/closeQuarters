@@ -17,7 +17,10 @@ class Player(nSprite):
         self.facingAngle = 0
 
         self.weapons = [ WeaponFactory("pistol") ]
+
+        #Use a specific channel for all gun sounds (prevents cut off when using automatic weapon)
         self.fireChannel = mixer.Channel(5)
+
         self.maxHealth = 10.0
         self.health = self.maxHealth
 

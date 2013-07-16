@@ -20,6 +20,9 @@ class BackgroundMusic(object):
         mixer.music.load(os.path.join(MUSICPATH, audioFile))
         mixer.music.play()
 
+    def stop(self):
+        mixer.music.stop()
+
     def pause(self):
         mixer.music.pause()
 

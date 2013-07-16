@@ -35,6 +35,9 @@ class Game(Mode):
         self.splatters = []
         self.splatterTextures = TextureSet("sparks.png")
 
+        self.shotsFired = 0
+        self.shotsHit = 0
+
     def getMap(self):
         return self.maps[self.activeMap]
 
@@ -94,6 +97,7 @@ class Game(Mode):
         if self.player.health == 0:
             #Gameover
             self.footsteps.stop()
+            self.music.stop()
             self.core.setActiveMode( GameOverScreen(self) )
         
     def onComputations(self, core, numTicks):
@@ -140,6 +144,7 @@ class Game(Mode):
 
             mobHitted = b.hitMob(self.getMap())
             if not mobHitted == False:
+                self.shotsHit += 1
                 self.bullets.remove(b)
                 self.zombiePain.play()
                 self.getMap().mobWasHit(mobHitted, self.player.weapons[0]) 
@@ -153,6 +158,7 @@ class Game(Mode):
             #Fire weapon
             ret = self.player.fireWeapon(numTicks)
             if ret != None:
+                self.shotsFired += 1
                 self.bullets.append(ret)
 
     def onSwitchIn(self, core):

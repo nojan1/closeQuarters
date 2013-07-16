@@ -13,6 +13,7 @@ Tiles and more => http://opengameart.org/content/dungeon-crawl-32x32-tiles
 Blood Splatter => http://opengameart.org/content/sparks-fire-ice-blood
 Laser gun 1 => http://rfdb.alphaoptix.com/images/weapon_firearm/FireArm_LaserGun.gif
 
+Menu selection sound => http://opengameart.org/content/menu-selection-click
 Pistol sound => http://soundbible.com/1906-Barreta-M9.html
 Footsteps => http://soundbible.com/2057-Footsteps-On-Cement.html
 Punch sound => http://soundbible.com/2069-Realistic-Punch.html

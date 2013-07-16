@@ -11,6 +11,9 @@ class MenuButton(object):
         self.text = text
         self.onClick = onClick
 
+        self.glowImage = image.load(os.path.join(GRAPHICPATH, "menu_glow.png"))
+        self.buttonImage = image.load(os.path.join(GRAPHICPATH, "menu_button.png"))
+
     def getRect(self, core):
         x = (core.res[0] / 2) - (BUTTONSIZE[0] / 2)
         y = BUTTONOFFSETY + ((BUTTONSIZE[1] + BUTTONSPACINGY) * self.index)
@@ -24,14 +27,16 @@ class MenuButton(object):
         rect.width += 10
         rect.height += 10
 
-        draw.rect(screen, (255,0,0), rect)
+        #draw.rect(screen, (255,0,0), rect)
+        screen.blit(self.glowImage, rect)
 
     def draw(self, screen, core):
         rect = self.getRect(core)
         fonten = font.Font(None, BUTTONSIZE[1] - 5)
         fontText = fonten.render(self.text, True, (255,255,255))
 
-        draw.rect(screen, (0,0,255), rect)
+        #draw.rect(screen, (0,0,255), rect)
+        screen.blit(self.buttonImage, rect)
         screen.blit(fontText, ((rect.x + (rect.width / 2) - (fontText.get_width() / 2)),(rect.y + (rect.height / 2) - (fontText.get_height() / 2))))
 
 class Menu(Mode):
@@ -44,7 +49,8 @@ class Menu(Mode):
                             MenuButton(3, "Exit", self.onExitClick)]
         self.activeButton = 0
 
-        #self.backdrop = image.load(os.path.join(GRAPHICSPATH, "menu_backdrop.jpg"))
+        self.backdrop = image.load(os.path.join(GRAPHICPATH, "menu_backdrop.jpg"))
+        self.menuSound = mixer.Sound(os.path.join(SOUNDPATH, "menu_click.wav"))
 
     def onStartGameClick(self, core):
         if self.menuButtons[0].text == "Resume Game":
@@ -53,7 +59,6 @@ class Menu(Mode):
             self.menuButtons[0].text = "Resume Game"
             core.setActiveMode( Game(core) )
         
-
     def onHighscoreClick(self, core):
         pass
 
@@ -66,9 +71,9 @@ class Menu(Mode):
     def onDraw(self, screen, core, numTicks):
         fonten = font.Font(None, 40)
         
-        screen.fill((0,0,0))
-        #screen.blit(self.backdrop, (0,0))
-        screen.blit(fonten.render("Close Quarters! Shoot that zombie...", True, (255,255,255)), (170,80))
+        #screen.fill((0,0,0))
+        screen.blit(self.backdrop, (0,0))
+        #screen.blit(fonten.render("Close Quarters! Shoot that zombie...", True, (255,255,255)), (170,80))
 
         self.menuButtons[self.activeButton].drawGlow(screen, core)
         for b in self.menuButtons:
@@ -80,9 +85,13 @@ class Menu(Mode):
                 self.activeButton -= 1
                 if self.activeButton < 0:
                     self.activeButton = len(self.menuButtons) - 1
+
+                self.menuSound.play()
             elif e.key == K_DOWN:
                 self.activeButton += 1
                 if self.activeButton > len(self.menuButtons) - 1:
                     self.activeButton = 0
+
+                self.menuSound.play()  
             elif e.key == K_RETURN:
                 self.menuButtons[self.activeButton].onClick(core)

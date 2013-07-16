@@ -134,11 +134,11 @@ class Laser(Weapon):
         if not Weapon.fire(self, startPos, angle, numTicks, channel):
             return
 
-        #To much firing overheats weapon
+        #To much firing overheats weapon1
         if numTicks - self.lastFire < LASERTHRESHOLD:
             self.stressLevel += 1
         else:
-            self.stressLevel -= 1
+            self.stressLevel -= 1       
 
         #Make sure the value is between limits
         if self.stressLevel < 0:

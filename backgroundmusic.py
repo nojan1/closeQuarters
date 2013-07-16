@@ -16,7 +16,7 @@ class BackgroundMusic(object):
         mixer.music.set_endevent(USEREVENT)
 
     def playTrack(self):
-        audioFile = self.files[ random.randint(0, len(self.files)) ]
+        audioFile = self.files[ random.randint(0, len(self.files)-1) ]
         mixer.music.load(os.path.join(MUSICPATH, audioFile))
         mixer.music.play()
 

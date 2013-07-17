@@ -16,6 +16,7 @@ Zombie texture => http://opengameart.org/content/zombie-sprites
 Tiles and more => http://opengameart.org/content/dungeon-crawl-32x32-tiles  
 Blood Splatter => http://opengameart.org/content/sparks-fire-ice-blood  
 Laser gun 1 => http://rfdb.alphaoptix.com/images/weapon_firearm/FireArm_LaserGun.gif  
+Spider texture => http://opengameart.org/content/spider-flare-sprite-sheets
 
 Sounds
 ------

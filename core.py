@@ -1,8 +1,8 @@
 from pygame import *
-import sys
+import sys, math
 
 class Core(object):
-    def __init__(self, resolution, fullscreen):
+    def __init__(self, resolution, fullscreen, drawFPS = False):
         self.activeMode = None
         self.lastMode = None
 
@@ -12,6 +12,9 @@ class Core(object):
         self.screen = None
         self.clock = None
 
+        self.drawFPS = drawFPS
+        self.numFrames = 0
+        
     def setActiveMode(self, newMode, discard=False):
         if self.activeMode != None:
             self.activeMode.onSwitchOut(self)
@@ -43,7 +46,7 @@ class Core(object):
         else:
             self.screen = display.set_mode(self.res)
 
-        self.clock = time.Clock()
+        self.fpsFont = font.Font(None, 20)
 
     def pleaseExit(self):
         if self.activeMode.onQuit():
@@ -59,9 +62,15 @@ class Core(object):
         lastDraw = 0
         while self.runLoop:
             if time.get_ticks() - lastDraw > (1000.0 / self.activeMode.fps):
+                fps = math.floor(1 / (float(time.get_ticks() - lastDraw) / 1000.0))
                 lastDraw = time.get_ticks()
                 self.activeMode.onPreDraw(self, time.get_ticks())
                 self.activeMode.onDraw(self.screen, self, time.get_ticks())
+                
+                if self.drawFPS:
+                    fpsSurf = self.fpsFont.render(str(fps), False, (255,0,0))
+                    self.screen.blit(fpsSurf, (20,20))
+
                 display.update()
             else:
                 for e in event.get():

@@ -32,18 +32,17 @@ class Mob(AnimSprite):
         if self.hasSeenPlayer:
             self.animEnable = True
             #Find path and attack!
-            path = self.ai.findPath(self, game)
-            if path:
-                if path[1] < ATTACKTHRESHOLD:
+            newPos = self.ai.findPath(self, game)
+            if newPos:
+                if game.player.getRect().colliderect( Rect(newPos, self.size) ):
                     #Attack player
                     if tickCount - self.lastAttack > 500:
                         game.handlePlayerDamage(self.damage)
                         self.lastAttack = tickCount
                 else:
-                    newX = int(math.cos(path[0]) * ZOMBIEMOVE) + self.pos[0]
-                    newY = int(math.sin(path[0]) * ZOMBIEMOVE) + self.pos[1]
-                
-                    self.pos = (newX, newY)
+                    self.pos = newPos
+            else:
+                self.animEnable = False
         else:
             self.hasSeenPlayer = self.ai.canSeePlayer(self, game) != False
      

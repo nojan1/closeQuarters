@@ -2,28 +2,17 @@ import math
 from pygame import Rect
 
 from config import *
+from geometry import getAngleDistance
 
 class AI(object):
     def canSeePlayer(self, mob, game):
         return self.isClearLine(mob.getRect().center, game.player.getRect().center, game, False)
 
-    def getAngleDistance(self, source, destination):
-        x1, y1 = source
-        x2, y2 = destination
-
-        dX = x1 - x2
-        dY = y1 - y2
-
-        angle = math.atan2(dY * -1, dX * -1)
-        distance = math.sqrt((dX*dX) + (dY*dY))
-        
-        return (angle, distance)
-
     def isClearLine(self, source, destination, game, mobsBlockLOS = True):
         #Return False or (angle, distance)
         x1, y1 = source
         x2, y2 = destination
-        angle, distance = self.getAngleDistance(source, destination)
+        angle, distance = getAngleDistance(source, destination)
 
         increment = 0
         while increment <= (distance - (TILESIZE[0] / 2)):
@@ -45,19 +34,17 @@ class AI(object):
         source = mob.getRect()
         destination.size = source.size
 
-        baseAngle, distance = self.getAngleDistance(source.center, destination.center)
-        angle = baseAngle
+        path = self.canSeePlayer(mob, game)
+        if path:
+            #Direct line of sight to player... no need to find a path
+            x = int(math.cos(path[0]) * ZOMBIEMOVE) + source.x
+            y = int(math.sin(path[0]) * ZOMBIEMOVE) + source.y
+            return (x,y)
+        else:
+            #Go into search mode (Not implemented)
+            initialAngle = getAngleDistance(source.center, destination.center)[0] - math.radians(90)
+            return self.search(source, destination, game, initialAngle)
 
-        angleModifiers = [math.radians(x) for x in [20, -20, 40, -40, 60, -60, 80, -80]]
-
-        while self.isClearLine(source.center, destination.center, game, True) == False:
-            if len(angleModifiers) == 0:
-                print("Found no path")
-                return False
-
-            angle = baseAngle + angleModifiers.pop(0)
-
-            destination.x = int(math.cos(angle) * ZOMBIEMOVE) + source.x 
-            destination.y = int(math.sin(angle) * ZOMBIEMOVE) + source.y 
-
-        return (angle, distance)
+    def search(self, source, destination, game, angle):
+        return False
+        

@@ -1,3 +1,6 @@
+# pickup.py: Defines the pickups, these are special types off tiles which will act in certain ways until they have been picked upp and afterwards reverting to just a piece of floor. All effects are set by the instances of pickups by themselves (game core does nothing in this case) 
+# Author: Niklas Hedlund
+
 from tile import Floor
 from weapon import *
 from config import *

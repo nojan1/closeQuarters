@@ -1,3 +1,7 @@
+# menu.py: The main menu, inherits Mode
+# Provides the user with a series off buttons and is used to start / end the game but also as a pause menu
+# Author: Niklas Hedlund
+
 from pygame import *
 import os
 

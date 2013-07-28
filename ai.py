@@ -1,3 +1,6 @@
+# ai.py: The AI system, does line of sight calulations as well as some path finding (not implemented yet)
+# Author: Niklas Hedlund
+
 import math
 from pygame import Rect
 

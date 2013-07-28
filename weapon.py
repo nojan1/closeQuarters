@@ -1,3 +1,6 @@
+# weapon.py: Defines classes for weapons and bullets, responsible for keeping track of weapon durability and to handle bullet collisions (hurting mobs)
+# Author: Niklas Hedlund
+
 from geometry import *
 from config import *
 import math

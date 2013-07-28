@@ -1,3 +1,6 @@
+# game.py: The actual game engine, inherits Mode
+# Author: Niklas Hedlund
+
 from pygame import *
 import os
 import random

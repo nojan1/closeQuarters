@@ -1,5 +1,7 @@
-from pygame import *
+# animsprite.py: Base class for animated sprites, inherits sprite and works by loading the correct image into the 'active' image variable
+# Author: Niklas Hedlund
 
+from pygame import *
 from textureset import *
 from sprite import *
 

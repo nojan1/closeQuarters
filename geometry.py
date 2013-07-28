@@ -1,3 +1,6 @@
+# geometry.py: Helper methods for geometry and coordinate convertions
+# Author: Niklas Hedlund
+
 import math
 
 def worldToScreen(worldPos, screenView):
@@ -10,7 +13,7 @@ def worldToScreen(worldPos, screenView):
     return (x, y)
 
 def screenToWorld(screenPos, screenView):
-    pass
+    raise NotImplementedError()
 
 def getAngleDistance(source, destination):
     x1, y1 = source

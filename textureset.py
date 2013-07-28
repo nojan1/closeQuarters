@@ -1,3 +1,6 @@
+# textureset.py: Class the handle texture sets (also known as grid layouts), contains methods to extract single textures from this set. Also supports on the fly rotation 
+# Author: Niklas Hedlund
+
 from pygame import *
 import os
 import math

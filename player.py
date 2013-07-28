@@ -1,3 +1,6 @@
+# player.py: Class that represents the actual player, more a less a container for all the needed attributes that we need to keep track of. However also inherits the sprite class since it needs to be displayed on the screen
+# Author: Niklas Hedlund
+
 from pygame import *
 import math
 

@@ -1,3 +1,6 @@
+# sprite.py: Base class for all sprites. Does not use any constructor arguments to make the class more generic and easy to inherit, however this does increase the need for error checking.  
+# Author: Niklas Hedlund
+
 from pygame import *
 from geometry import worldToScreen
 

@@ -1,3 +1,7 @@
+# zombie.py: Holds the Zombie class which is one of the mobs in the game
+# inherits Mob and just sets up the different attributes (textures and such)
+# Author: Niklas Hedlund
+
 from mob import *
 
 class Zombie(Mob):

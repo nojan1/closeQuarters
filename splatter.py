@@ -1,5 +1,7 @@
-from pygame import *
+# splatter.py: Implements the blood splatter effect that gets spawned when ever a mob is hit, really knowing more then a simple animated sprite
+# Author: Niklas Hedlund
 
+from pygame import *
 from animsprite import *
 
 class Splatter(AnimSprite):

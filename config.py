@@ -1,3 +1,6 @@
+# config.py: Some configuration options used through the game
+# Author: Niklas Hedlund
+
 GRAPHICPATH="./images"
 SOUNDPATH="./sounds"
 MUSICPATH="./sounds/music"

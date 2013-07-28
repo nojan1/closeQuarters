@@ -1,3 +1,6 @@
+# hud.py: The HUD class gives information to the player during the game about things such as health and weapon status
+# Author: Niklas Hedlund
+
 import os
 from pygame import *
 

@@ -1,5 +1,7 @@
-from config import*
+# backgroundmusic.py: Handles the in game background music, uses a simple form of random playlist
+# Author: Niklas Hedlund
 
+from config import*
 from pygame import *
 import os
 import random

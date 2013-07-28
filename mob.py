@@ -1,3 +1,6 @@
+# mob.py: Base class for mobs, defines basic things such as health / damage but also contains the part where the AI system gets called
+# Author: Niklas Hedlund 
+
 from animsprite import *
 from config import *
 import math

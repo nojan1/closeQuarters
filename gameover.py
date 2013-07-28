@@ -1,3 +1,6 @@
+# gameover.py: The game over screen inherits Mode and is responsible for showing the player the end of game information
+# Author: Niklas Hedlund
+
 from pygame import *
 import os
 

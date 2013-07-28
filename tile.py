@@ -1,3 +1,6 @@
+# tile.py: Contains the different tiles that makes up the game world, handles all the logic for drawing as well as the events that happens when they are stepped on
+# Author: Niklas Hedlund 
+
 from pygame import *
 from config import *
 from sprite import *

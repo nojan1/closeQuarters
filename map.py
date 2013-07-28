@@ -1,3 +1,6 @@
+# map.py: The Map class represents a instance of a game world, is responsible for parsing level files and creating / containing all the tiles, mobs and such. Also does all the collision calculations
+# Author: Niklas Hedlund
+
 import os
 import random
 import math

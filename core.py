@@ -1,3 +1,6 @@
+# core.py: The Core class, contains the main loop and calls relevant methods in active mode when the time is right
+# Author: Niklas Hedlund
+
 from pygame import *
 import sys, math
 
@@ -86,5 +89,3 @@ class Core(object):
 
         #Pygame quit
         quit()
-
-

@@ -40,8 +40,8 @@ class AI(object):
         path = self.canSeePlayer(mob, game)
         if path:
             #Direct line of sight to player... no need to find a path
-            x = int(math.cos(path[0]) * ZOMBIEMOVE) + source.x
-            y = int(math.sin(path[0]) * ZOMBIEMOVE) + source.y
+            x = int(math.cos(path[0]) * mob.speed) + source.x
+            y = int(math.sin(path[0]) * mob.speed) + source.y
             return (x,y)
         else:
             #Go into search mode (Not implemented)

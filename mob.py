@@ -8,12 +8,13 @@ import math
 import random
 
 class Mob(AnimSprite):
-    def __init__(self, ai, health, damage):
+    def __init__(self, ai, health, damage, speed):
         AnimSprite.__init__(self)
 
         self.ai = ai
         self.health = health
         self.damage = damage
+        self.speed = speed
 
         self.hasSeenPlayer = False
         self.hasActivated = False

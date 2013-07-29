@@ -164,6 +164,8 @@ class Game(Mode):
                 self.shotsFired += 1
                 self.bullets.append(ret)
 
+        self.player.weapons[0].weaponUpkeep(numTicks)
+
     def onSwitchIn(self, core):
         self.music.unpause()
 

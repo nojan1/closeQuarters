@@ -62,6 +62,9 @@ class Weapon(object):
     def getHUDText(self):
         return ""
         
+    def weaponUpkeep(self, numTicks):
+        pass
+
     def isDepleted(self):
         return False
 
@@ -129,25 +132,36 @@ class Laser(Weapon):
         self.fireSound.set_volume(0.8)
 
         self.damage = 2
-        self.rof = 1
+        self.rof = 3
 
         self.stressLevel = 0
+        self.lastCool = 0
+
+    def weaponUpkeep(self, numTicks):
+        if numTicks - self.lastCool > LASERTHRESHOLD * 0.4:
+            self.lastCool = numTicks
+            self.stressLevel -= 1
+
+            if self.stressLevel < 0:
+                self.stressLevel = 0
 
     def fire(self, startPos, angle, numTicks, channel):
-        if not Weapon.fire(self, startPos, angle, numTicks, channel):
-            return
+        lastFire = self.lastFire
+        ret = Weapon.fire(self, startPos, angle, numTicks, channel)
+        if not ret:
+            return None
 
         #To much firing overheats weapon1
         if numTicks - self.lastFire < LASERTHRESHOLD:
             self.stressLevel += 1
-        else:
-            self.stressLevel -= 1       
 
         #Make sure the value is between limits
-        if self.stressLevel < 0:
-            self.stressLevel = 0
-        elif self.stressLevel > 4:
+        if self.stressLevel > 4:
             self.stressLevel = 4
+            
+        self.lastCool = numTicks
+
+        return ret
 
     def getHUDText(self):
         labels = ["COLD", "OKEY", "HOT", "BURN", "OVER"]
@@ -166,7 +180,7 @@ class LaserBullet(Bullet):
         pos = worldToScreen(self.pos, game.getView())
 
         x1 = math.cos(self.angle) * -5 + pos[0] 
-        y1 = math.cos(self.angle) * -5 + pos[1]
+        y1 = math.sin(self.angle) * -5 + pos[1]
 
         x2 = math.cos(self.angle) * 3 + pos[0]
         y2 = math.sin(self.angle) * 3 + pos[1]

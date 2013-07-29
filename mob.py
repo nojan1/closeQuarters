@@ -46,7 +46,11 @@ class Mob(AnimSprite):
             #Find path and attack!
             newPos = self.ai.findPath(self, game)
             if newPos:
-                if game.player.getRect().colliderect( Rect(newPos, self.size) ):
+                attackRect = Rect(newPos, self.size)
+                attackRect.move_ip(ATTACKTHRESHOLD / 2, ATTACKTHRESHOLD / 2)
+                attackRect.inflate_ip(ATTACKTHRESHOLD, ATTACKTHRESHOLD)
+
+                if game.player.getRect().colliderect( attackRect ):
                     #Attack player
                     if tickCount - self.lastAttack > 500:
                         game.handlePlayerDamage(self.damage)

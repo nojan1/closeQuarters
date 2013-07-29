@@ -6,7 +6,7 @@ from mob import *
 
 class Spider(Mob):
     def __init__(self, pos, ai, texture):
-        Mob.__init__(self, ai, 3, 2, 4)
+        Mob.__init__(self, ai, 1, 1, 4)
         self.pos = pos
         self.size = (32,32)
 

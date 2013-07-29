@@ -6,7 +6,7 @@ from mob import *
 
 class Zombie(Mob):
     def __init__(self, pos, ai, zombieTextures):
-        Mob.__init__(self, ai, 2, 1, 3)
+        Mob.__init__(self, ai, 2, 2, 3)
         self.pos = pos
         self.size = (32,32)
 

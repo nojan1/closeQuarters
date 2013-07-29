@@ -3,6 +3,7 @@
 
 from animsprite import *
 from config import *
+import geometry
 import math
 import random
 
@@ -18,6 +19,9 @@ class Mob(AnimSprite):
         self.hasActivated = False
         self.lastAttack = 0
 
+        self.imageIndexesTable = []
+        self.facingAngle = 0
+
     def takeDamage(self, damage):
         #True = Dead, False = "Took it like a man"
         self.health -= damage
@@ -26,6 +30,10 @@ class Mob(AnimSprite):
             return True
 
         return False
+
+    def draw(self, screen, game, numTicks = 0):
+        self.hasActivated = False
+        AnimSprite.draw(self, screen, game, numTicks)
 
     def onActivation(self, game, tickCount):
         if self.hasActivated:
@@ -43,7 +51,17 @@ class Mob(AnimSprite):
                         game.handlePlayerDamage(self.damage)
                         self.lastAttack = tickCount
                 else:
+                    self.facingAngle = geometry.getAngleDistance(self.pos, newPos)[0]
                     self.pos = newPos
+
+                    if len(self.imageIndexesTable) != 0:
+                        #Switch to another set of textures depending on current angle
+                        slices = 360.0 / len(self.imageIndexesTable)
+                        angle = math.degrees(self.facingAngle) % 360
+                        index = int(round(angle / slices))
+                
+                        self.imageIndexes = self.imageIndexesTable[index]
+
             else:
                 self.animEnable = False
         else:

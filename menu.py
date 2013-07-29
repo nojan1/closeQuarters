@@ -8,24 +8,24 @@ import os
 from mode import Mode
 from config import *    
 from game import Game
+from instructions import InstructionsScreen
 
 class MenuButton(object):
-    def __init__(self, index, text, onClick):
-        self.index = index
+    def __init__(self, text, onClick):
         self.text = text
         self.onClick = onClick
 
         self.glowImage = image.load(os.path.join(GRAPHICPATH, "menu_glow.png"))
         self.buttonImage = image.load(os.path.join(GRAPHICPATH, "menu_button.png"))
 
-    def getRect(self, core):
+    def getRect(self, core, index):
         x = (core.res[0] / 2) - (BUTTONSIZE[0] / 2)
-        y = BUTTONOFFSETY + ((BUTTONSIZE[1] + BUTTONSPACINGY) * self.index)
+        y = BUTTONOFFSETY + ((BUTTONSIZE[1] + BUTTONSPACINGY) * index)
 
         return Rect(x, y, BUTTONSIZE[0], BUTTONSIZE[1])
 
-    def drawGlow(self, screen, core):
-        rect = self.getRect(core)
+    def drawGlow(self, screen, core, index):
+        rect = self.getRect(core, index)
         rect.x -= 5
         rect.y -= 5
         rect.width += 10
@@ -34,8 +34,8 @@ class MenuButton(object):
         #draw.rect(screen, (255,0,0), rect)
         screen.blit(self.glowImage, rect)
 
-    def draw(self, screen, core):
-        rect = self.getRect(core)
+    def draw(self, screen, core, index):
+        rect = self.getRect(core, index)
         fonten = font.Font(None, BUTTONSIZE[1] - 5)
         fontText = fonten.render(self.text, True, (255,255,255))
 
@@ -47,27 +47,25 @@ class Menu(Mode):
     def __init__(self, core):
         Mode.__init__(self, core, 30)
 
-        self.menuButtons = [MenuButton(0, "Start New Game", self.onStartGameClick),
-                            MenuButton(1, "Highscore", self.onHighscoreClick),
-                            MenuButton(2, "Options", self.onOptionsClick),
-                            MenuButton(3, "Exit", self.onExitClick)]
+        self.menuButtons = [MenuButton("Start New Game", self.onStartGameClick),
+                            MenuButton("Instructions", self.onInstructionsClick),
+                            MenuButton("Exit", self.onExitClick)]
         self.activeButton = 0
 
         self.backdrop = image.load(os.path.join(GRAPHICPATH, "menu_backdrop.jpg"))
         self.menuSound = mixer.Sound(os.path.join(SOUNDPATH, "menu_click.wav"))
 
-    def onStartGameClick(self, core):
-        if self.menuButtons[0].text == "Resume Game":
-            core.revertLastMode()
-        else:  
-            self.menuButtons[0].text = "Resume Game"
-            core.setActiveMode( Game(core) )
-        
-    def onHighscoreClick(self, core):
-        pass
+    def onResumeGame(self, core):
+        core.revertLastMode()
 
-    def onOptionsClick(self, core):
-        pass
+    def onStartGameClick(self, core):
+        if self.menuButtons[0].text != "Resume Game":
+            self.menuButtons.insert(0, MenuButton("Resume Game", self.onResumeGame))
+            
+        core.setActiveMode( Game(core) )
+        
+    def onInstructionsClick(self, core):
+        core.setActiveMode( InstructionsScreen(core) )
 
     def onExitClick(self, core):
         core.pleaseExit()
@@ -79,9 +77,9 @@ class Menu(Mode):
         screen.blit(self.backdrop, (0,0))
         #screen.blit(fonten.render("Close Quarters! Shoot that zombie...", True, (255,255,255)), (170,80))
 
-        self.menuButtons[self.activeButton].drawGlow(screen, core)
-        for b in self.menuButtons:
-            b.draw(screen, core)
+        self.menuButtons[self.activeButton].drawGlow(screen, core, self.activeButton)
+        for i, b in enumerate(self.menuButtons):
+            b.draw(screen, core, i)
 
     def handleEvent(self, e, core, numTicks):
         if e.type == KEYDOWN:

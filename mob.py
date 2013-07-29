@@ -58,8 +58,8 @@ class Mob(AnimSprite):
                     if len(self.imageIndexesTable) != 0:
                         #Switch to another set of textures depending on current angle
                         slices = 360.0 / len(self.imageIndexesTable)
-                        angle = math.degrees(self.facingAngle) % 360
-                        index = int(round(angle / slices))
+                        angle = math.degrees(self.facingAngle)
+                        index = int(round(angle / slices)) % len(self.imageIndexesTable)
                 
                         self.imageIndexes = self.imageIndexesTable[index]
 

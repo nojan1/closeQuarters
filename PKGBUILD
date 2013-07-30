@@ -1,6 +1,6 @@
 # Maintainer: Niklas Hedlund <nojan1989@gmail.com>
 pkgname=closequarters-git
-pkgver=35.753dce5
+pkgver=43.7e71768
 pkgrel=1
 pkgdesc="2D top view zombie shooter game in cramped coridors"
 url="http://github.com/nojan1/closeQuarters"
@@ -29,6 +29,8 @@ build() {
   mv main.py closeQuarters
   sed -i 's/from core/from closequarters.core/' closeQuarters
   sed -i 's/from menu/from closequarters.menu/' closeQuarters
+
+  echo "pass" > __init__.py
 }
 
 package() {

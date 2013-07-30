@@ -21,4 +21,3 @@ if __name__ == "__main__":
     core.doInit()
     core.setActiveMode(Menu(core))
     core.enterLoop()
-1

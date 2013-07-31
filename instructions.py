@@ -15,9 +15,16 @@ green circle drawn around the player will show the target angle.
 
 New weapons and more health are available through pickups, once
 a weapon has been depleted the previous one will be used. 
-The first weapon is a pistol with unlimited ammo.
 
-Press ESCAPE to return to menu""" 
+Your main weapon is a pistol with unlimited ammo. As for the
+auto rifle it has a fixed amount of 100 bullets per pickup.
+The laser rifle on the other hand will be depleted on overheat,
+it is therefore important to let this one cool down between shoots.
+
+Zombies are slower but can take more damage. The spiders on the 
+other hand are fast and hard to see, but dies on one hit.
+
+Press ESCAPE to return to the menu""" 
     
     def onDraw(self, screen, core, numTicks):
         screen.fill((0,0,0))

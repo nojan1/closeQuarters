@@ -42,8 +42,13 @@ class GameOverScreen(Mode):
     def onDraw(self, screen, core, numTicks):
         screen.blit(self.lastScreen, (0,0))
         
-        frameRect = Rect(250, 120, 524, 618)
-        screen.blit(self.imageTopic, Rect((212, 10), self.imageTopic.get_size()))
+        frameRect = Rect((0, 120), self.imageFrame.get_size())
+        frameRect.x = (core.res[0] / 2) - (frameRect.width / 2)
+
+        topicRect = Rect((0, 10), self.imageTopic.get_size())
+        topicRect.x = (core.res[0] / 2) - (topicRect.width / 2)
+
+        screen.blit(self.imageTopic, topicRect)
         
         if self.game.shotsFired == 0:
             accuracy = 0
@@ -55,7 +60,6 @@ class GameOverScreen(Mode):
         line2 = self.fontContent.render("Shots hit: %i" % self.game.shotsHit, True, (0,0,0))
         line3 = self.fontContent.render("Accuracy: %i percent" % accuracy, True, (0,0,0))
 
-        #screen.fill((100,100,100,50), frame)
         screen.blit(self.imageFrame, frameRect)
         self.drawTexts(screen, frameRect.move(20,20).topleft, [header, line1, line2, line3])
 

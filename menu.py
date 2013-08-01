@@ -71,11 +71,10 @@ class Menu(Mode):
         core.pleaseExit()
 
     def onDraw(self, screen, core, numTicks):
-        fonten = font.Font(None, 40)
-        
-        #screen.fill((0,0,0))
-        screen.blit(self.backdrop, (0,0))
-        #screen.blit(fonten.render("Close Quarters! Shoot that zombie...", True, (255,255,255)), (170,80))
+        backdropX = (core.res[0] / 2) - (self.backdrop.get_width() / 2)
+
+        screen.fill((0,0,0))
+        screen.blit(self.backdrop, (backdropX,0))
 
         self.menuButtons[self.activeButton].drawGlow(screen, core, self.activeButton)
         for i, b in enumerate(self.menuButtons):

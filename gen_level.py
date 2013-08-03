@@ -34,7 +34,7 @@ def makeCor(start, end, grid, joinUp = False):
         start = ( start[0] + int((increment[0] * -1) * (CORTHICKNESS / 2)), start[1] + int((increment[1] * -1) * (CORTHICKNESS / 2)) )
         distance = getAngleDistance(start, end)[1]
 
-    iMin = int((CORTHICKNESS / 2) * -1) - 1
+    iMin = int((CORTHICKNESS / 2) * -1)
     iMax = int(CORTHICKNESS / 2)
     for i in range(iMin, iMax + 1):
         sX = start[0] + (i * increment[1])
@@ -44,9 +44,7 @@ def makeCor(start, end, grid, joinUp = False):
             x = sX + (z * increment[0])
             y = sY + (z * increment[1])
             try:
-                if (i == iMin or i == iMax) and grid[x][y] != "#":
-                    grid[x][y] = "W"
-                elif grid[x][y] != "?": 
+                if grid[x][y] != "?": 
                     grid[x][y] = "#"
             except:
                 print("Out of bounds %i,%i" % (x,y))
@@ -78,8 +76,8 @@ for roomID in range(numRooms):
             print("Could not resolve room placement for room %i, bailing" % (roomID+1))
             break
 
-        room.x = random.randint(1, WORLDSIZE[0] - 1)
-        room.y = random.randint(1, WORLDSIZE[1] - 1)
+        room.x = random.randint(2, WORLDSIZE[0] - 1)
+        room.y = random.randint(2, WORLDSIZE[1] - 1)
 
         if (room.x + room.width) >= (WORLDSIZE[0] - 1) or (room.y + room.height) >= (WORLDSIZE[1] - 1):
             attempts += 1
@@ -103,14 +101,11 @@ for roomID in range(numRooms):
 
     for x in range(room.x, room.x + room.width):
         for y in range(room.y, room.y + room.height):
-            if x == room.x or x == (room.x + room.width - 1) or y == room.y or y == (room.y + room.height - 1):
-                mapGrid[x][y] = "W"
+            if random.randint(0,100) < 10:
+                mobChar = list(["Z", "Z", "S"])[random.randint(0,2)]
+                mapGrid[x][y] = mobChar
             else:
-                if random.randint(0,100) < 10:
-                    mobChar = list(["Z", "S"])[random.randint(0,1)]
-                    mapGrid[x][y] = mobChar
-                else:
-                    mapGrid[x][y] = "#"
+                mapGrid[x][y] = "#"
 
     mapGrid[wpX][wpY] = "?"
 
@@ -148,6 +143,12 @@ for r, w in roomInfo:
             makeCor((nearest[1][0], w[1]), nearest[1], mapGrid, True)
 
 
+#Add the walls
+nonFloors = ("#", "Z", "S", "P", "H", "R", "L")
+for y in range(1,WORLDSIZE[1] + 1):
+    for x in range(1,WORLDSIZE[0] + 1):
+        if mapGrid[x][y] == "." and (mapGrid[x][y+1] in nonFloors or mapGrid[x+1][y] in nonFloors or mapGrid[x][y-1] in nonFloors or mapGrid[x-1][y] in nonFloors or mapGrid[x+1][y+1] in nonFloors or mapGrid[x+1][y-1] in nonFloors or mapGrid[x-1][y-1] in nonFloors or mapGrid[x-1][y+1] in nonFloors):
+            mapGrid[x][y] = "W"
 
 #Output map file
 f = open("map.lvl", "w")

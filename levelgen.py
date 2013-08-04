@@ -1,30 +1,12 @@
 import random, math, sys
 from pygame import Rect
 from geometry import getAngleDistance
-
-##### CONFIG #####
-
-WORLDSIZE = (70, 50)
-
-ROOMMAX = 15
-ROOMMIN = 9
-
-NUMROOMSMIN = 3
-NUMROOMSMAX = 5
-
-ROOMSPACING = 15
-MAXROOMALLOCATTEMPTS = 1000
-
-CORTHICKNESS = 4
-
-MOBMIN = 40 
-MOBMAX = 50
-
-##################
+from config import *
 
 class LevelGenerator(object):
     def __init__(self):
         self.roomInfo = []
+        self.playerPos = (0,0)
 
         #Fill grid with EMPTY
         self.mapGrid = []
@@ -37,6 +19,7 @@ class LevelGenerator(object):
 
         self.makeRooms()
         self.makeCor()
+        self.makeEntries()
         self.makeSpecials()
         self.makeWalls()
 
@@ -148,8 +131,7 @@ class LevelGenerator(object):
                 except:
                     print("Out of bounds %i,%i" % (x,y))
         
-            
-    def makeSpecials(self):
+    def makeEntries(self):
         #Add specials
         length = CORTHICKNESS
         x1 = self.roomInfo[0][0].x + int(self.roomInfo[0][0].width / 2)
@@ -168,12 +150,14 @@ class LevelGenerator(object):
             self.mapGrid[x2 + i][y2 + 3] = "+"
 
         self.mapGrid[x1 + int(length / 2)][y1-2] = "P"
-        playerPos = (x1 + int(length / 2), y1 - 2)
+        self.playerPos = (x1 + int(length / 2), y1 - 2)
+            
 
+    def makeSpecials(self):
         #Add mobs and pickups
         for i in range(random.randint(MOBMIN, MOBMAX)):
             pos = (-1,-1)
-            while pos == (-1,-1) or self.mapGrid[pos[0]][pos[1]] != "#" or getAngleDistance(playerPos, pos)[1] < 10:
+            while pos == (-1,-1) or self.mapGrid[pos[0]][pos[1]] != "#" or getAngleDistance(self.playerPos, pos)[1] < MOBTOPLAYERTHRESHOLD:
                 pos = ( random.randint(2, WORLDSIZE[0] - 1), random.randint(2, WORLDSIZE[1] - 1) )
 
             if random.randint(0,100) > 90:

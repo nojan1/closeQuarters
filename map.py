@@ -13,6 +13,7 @@ from textureset import *
 from ai import AI
 from pickup import *
 from weapon import WeaponFactory
+from levelgen import LevelGenerator
 
 class Map(object):
     def __init__(self, levelID, game):
@@ -37,10 +38,13 @@ class Map(object):
         mobDict = {"Z": [Zombie, 2, zombieTextures], "S": [Spider, 4, spiderTextures]}
 
         path = os.path.join(LEVELPATH, str(levelID)+".lvl")
-        if not os.path.exists(path):
-            raise Exception("No such levelfile;", path)
+        if os.path.exists(path):
+           data = open(path, "r").read()
+        else:
+            levelGen = LevelGenerator()
+            data = levelGen.generateOutput()
 
-        for yPos,line in enumerate(open(path, "r")):
+        for yPos,line in enumerate(data.split("\n")):
             x = []
             for xPos, char in enumerate(line.strip().upper()):
                 pos = (xPos, yPos)

@@ -77,9 +77,9 @@ for roomID in range(numRooms):
             break
 
         room.x = random.randint(2, WORLDSIZE[0] - 1)
-        room.y = random.randint(2, WORLDSIZE[1] - 1)
+        room.y = random.randint(5, WORLDSIZE[1] - 1)
 
-        if (room.x + room.width) >= (WORLDSIZE[0] - 1) or (room.y + room.height) >= (WORLDSIZE[1] - 1):
+        if (room.x + room.width) >= (WORLDSIZE[0] - 1) or (room.y + room.height) >= (WORLDSIZE[1] - 4):
             attempts += 1
             continue
 
@@ -109,6 +109,8 @@ for roomID in range(numRooms):
 
     mapGrid[wpX][wpY] = "?"
 
+#Sort rooms in order of Y coordinates
+roomInfo.sort(key=lambda r: r[0].y)
 print("Placed %i rooms" % len(roomInfo))
 
 #Generate corridors
@@ -125,7 +127,7 @@ for r, w in roomInfo:
             nearest = (r2, w2)
 
     #Only needs one coridor?
-    roomInfo.remove( (r2, w2) )
+    #roomInfo.remove( (r2, w2) )
 
     print("Needs to make coridor between %s and %s" % (w, nearest[1]))
     if math.degrees(angle) % 90 == 0:
@@ -143,12 +145,32 @@ for r, w in roomInfo:
             makeCor((nearest[1][0], w[1]), nearest[1], mapGrid, True)
 
 
+#Add specials
+length = CORTHICKNESS
+x1 = roomInfo[0][0].x + int(roomInfo[0][0].width / 2)
+y1 = roomInfo[0][0].y
+
+x2 = roomInfo[-1][0].x + int(roomInfo[-1][0].width / 2)
+y2 = roomInfo[-1][0].y + roomInfo[-1][0].height - 1
+
+for i in range(length):
+    mapGrid[x1 + i][y1 - 1] = "#"
+    mapGrid[x1 + i][y1 - 2] = "#"
+    mapGrid[x1 + i][y1 - 3] = "-"
+
+    mapGrid[x2 + i][y2 + 1] = "#"
+    mapGrid[x2 + i][y2 + 2] = "#"
+    mapGrid[x2 + i][y2 + 3] = "+"
+
+mapGrid[x1 + int(length / 2)][y1-2] = "P"
+
 #Add the walls
-nonFloors = ("#", "Z", "S", "P", "H", "R", "L")
+nonFloors = ("#", "Z", "S", "P", "H", "R", "L", "+", "-")
 for y in range(1,WORLDSIZE[1] + 1):
     for x in range(1,WORLDSIZE[0] + 1):
         if mapGrid[x][y] == "." and (mapGrid[x][y+1] in nonFloors or mapGrid[x+1][y] in nonFloors or mapGrid[x][y-1] in nonFloors or mapGrid[x-1][y] in nonFloors or mapGrid[x+1][y+1] in nonFloors or mapGrid[x+1][y-1] in nonFloors or mapGrid[x-1][y-1] in nonFloors or mapGrid[x-1][y+1] in nonFloors):
             mapGrid[x][y] = "W"
+
 
 #Output map file
 f = open("map.lvl", "w")

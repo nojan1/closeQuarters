@@ -170,7 +170,7 @@ class LevelGenerator(object):
 
     def makeWalls(self):
         #Add the walls
-        nonFloors = ("#", "Z", "S", "P", "H", "R", "L", "+", "-")
+        nonFloors = ("#", "Z", "S", "P", "H", "R", "L")
         for y in range(1,WORLDSIZE[1] + 1):
             for x in range(1,WORLDSIZE[0] + 1):
                 if self.mapGrid[x][y] == "." and (self.mapGrid[x][y+1] in nonFloors or self.mapGrid[x+1][y] in nonFloors or self.mapGrid[x][y-1] in nonFloors or self.mapGrid[x-1][y] in nonFloors or self.mapGrid[x+1][y+1] in nonFloors or self.mapGrid[x+1][y-1] in nonFloors or self.mapGrid[x-1][y-1] in nonFloors or self.mapGrid[x-1][y+1] in nonFloors):

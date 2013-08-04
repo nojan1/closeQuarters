@@ -35,7 +35,7 @@ class LevelGenerator(object):
             posFound = False
             while not posFound:
                 if attempts == MAXROOMALLOCATTEMPTS:
-                    print("Could not resolve room placement for room %i, bailing" % (roomID+1))
+                    #print("Could not resolve room placement for room %i, bailing" % (roomID+1))
                     break
 
                 room.x = random.randint(2, WORLDSIZE[0] - 1)
@@ -67,7 +67,7 @@ class LevelGenerator(object):
 
         #Sort rooms in order of Y coordinates
         self.roomInfo.sort(key=lambda r: r[0].y)
-        print("Placed %i rooms" % len(self.roomInfo))
+        #print("Placed %i rooms" % len(self.roomInfo))
 
     def makeCor(self):
         #Generate corridors
@@ -86,12 +86,12 @@ class LevelGenerator(object):
             #Only needs one coridor?
             #roomInfo.remove( (r2, w2) )
 
-            print("Needs to make coridor between %s and %s" % (w, nearest[1]))
+            #print("Needs to make coridor between %s and %s" % (w, nearest[1]))
             if math.degrees(angle) % 90 == 0:
-                print(" - Direct line detected, using simple algoritm")
+                #print(" - Direct line detected, using simple algoritm")
                 self.placeCor(w, nearest[1])
             else:
-                print(" - Needs to bend the line")
+                #print(" - Needs to bend the line")
                 if abs(w[0] - nearest[1][0]) < abs(w[1] - nearest[1][1]):
                     #Bend for X
                     self.placeCor(w,(w[0], nearest[1][1]))

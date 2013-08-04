@@ -43,6 +43,7 @@ class Map(object):
         else:
             levelGen = LevelGenerator()
             data = levelGen.generateOutput()
+            print("Note: Level was auto generated")
 
         for yPos,line in enumerate(data.split("\n")):
             x = []

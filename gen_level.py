@@ -17,6 +17,9 @@ MAXROOMALLOCATTEMPTS = 1000
 
 CORTHICKNESS = 4
 
+MOBMIN = 40 
+MOBMAX = 50
+
 ##################
 
 def makeCor(start, end, grid, joinUp = False):
@@ -101,10 +104,6 @@ for roomID in range(numRooms):
 
     for x in range(room.x, room.x + room.width):
         for y in range(room.y, room.y + room.height):
-            if random.randint(0,100) < 10:
-                mobChar = list(["Z", "Z", "S"])[random.randint(0,2)]
-                mapGrid[x][y] = mobChar
-            else:
                 mapGrid[x][y] = "#"
 
     mapGrid[wpX][wpY] = "?"
@@ -163,6 +162,21 @@ for i in range(length):
     mapGrid[x2 + i][y2 + 3] = "+"
 
 mapGrid[x1 + int(length / 2)][y1-2] = "P"
+playerPos = (x1 + int(length / 2), y1 - 2)
+
+#Add mobs and pickups
+for i in range(random.randint(MOBMIN, MOBMAX)):
+    pos = (-1,-1)
+    while pos == (-1,-1) or mapGrid[pos[0]][pos[1]] != "#" or getAngleDistance(playerPos, pos)[1] < 10:
+        pos = ( random.randint(2, WORLDSIZE[0] - 1), random.randint(2, WORLDSIZE[1] - 1) )
+
+    if random.randint(0,100) > 90:
+        #place pickup
+        char = list(["L", "R", "H"])[random.randint(0,2)]
+    else:
+        char = list(["Z", "Z", "S"])[random.randint(0,2)]
+    
+    mapGrid[pos[0]][pos[1]] = char
 
 #Add the walls
 nonFloors = ("#", "Z", "S", "P", "H", "R", "L", "+", "-")

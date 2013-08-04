@@ -12,7 +12,7 @@ ROOMMIN = 9
 NUMROOMSMIN = 3
 NUMROOMSMAX = 5
 
-ROOMSPACING = 10
+ROOMSPACING = 15
 MAXROOMALLOCATTEMPTS = 1000
 
 CORTHICKNESS = 4
@@ -106,8 +106,6 @@ for roomID in range(numRooms):
         for y in range(room.y, room.y + room.height):
                 mapGrid[x][y] = "#"
 
-    mapGrid[wpX][wpY] = "?"
-
 #Sort rooms in order of Y coordinates
 roomInfo.sort(key=lambda r: r[0].y)
 print("Placed %i rooms" % len(roomInfo))
@@ -193,6 +191,7 @@ for y in range(WORLDSIZE[1] + 2):
     for x in range(WORLDSIZE[0] + 2):
         row += mapGrid[x][y]
 
-    f.write(row + "\n")
+    if y == 0 or y == (WORLDSIZE[1] + 1) or row.strip().replace(".", "") != "":
+        f.write(row + "\n")
 
 f.close()

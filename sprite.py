@@ -19,12 +19,9 @@ class nSprite(object):
             raise Exception("No Size for object; ", self)
 
     def getRect(self):
-        #if self.image == None or self.pos == None:
-         #   print("Warning: Not enough info to generate sprite rect")
-          #  return None
-
         return Rect(self.pos, self.getSize())
 
+    #Get a Rect in where the x,y coordinates have been adjusted to screen coordinates
     def getRectScreen(self, game):
         rect = self.getRect()
         if rect == None:

@@ -31,7 +31,6 @@ class MenuButton(object):
         rect.width += 10
         rect.height += 10
 
-        #draw.rect(screen, (255,0,0), rect)
         screen.blit(self.glowImage, rect)
 
     def draw(self, screen, core, index):
@@ -39,7 +38,6 @@ class MenuButton(object):
         fonten = font.Font(None, BUTTONSIZE[1] - 5)
         fontText = fonten.render(self.text, True, (255,255,255))
 
-        #draw.rect(screen, (0,0,255), rect)
         screen.blit(self.buttonImage, rect)
         screen.blit(fontText, ((rect.x + (rect.width / 2) - (fontText.get_width() / 2)),(rect.y + (rect.height / 2) - (fontText.get_height() / 2))))
 
@@ -47,11 +45,13 @@ class Menu(Mode):
     def __init__(self, core):
         Mode.__init__(self, core, 30)
 
+        #The buttons in the menu
         self.menuButtons = [MenuButton("Start New Game", self.onStartGameClick),
                             MenuButton("Instructions", self.onInstructionsClick),
                             MenuButton("Exit", self.onExitClick)]
         self.activeButton = 0
 
+        #Load resources
         self.backdrop = image.load(os.path.join(GRAPHICPATH, "menu_backdrop.jpg"))
         self.menuSound = mixer.Sound(os.path.join(SOUNDPATH, "menu_click.wav"))
 
@@ -71,6 +71,7 @@ class Menu(Mode):
         core.pleaseExit()
 
     def onDraw(self, screen, core, numTicks):
+        #Center background image (usefull in non standard res)
         backdropX = (core.res[0] / 2) - (self.backdrop.get_width() / 2)
 
         screen.fill((0,0,0))

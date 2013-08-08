@@ -7,6 +7,7 @@ from sprite import *
 
 import random
 
+#Base tile for building the map
 class Tile(nSprite):
     def __init__(self, location, image = None):
         nSprite.__init__(self)
@@ -36,6 +37,7 @@ class Wall(Tile):
     def onCollision(self, game, isPlayer):
         return True
 
+#Special tile to change level when the player steps on it
 class MapChange(Floor):
     def __init__(self, location, tileTextures, newMapID):
         Floor.__init__(self, location, tileTextures)

@@ -11,13 +11,19 @@ class AnimSprite(nSprite):
 
         self.textureOffset = (0,0)
         self.textures = None
+
+        #The image indexes is the indexes that will be used for textureset methods, it is a list since this will vary depending on where in the animation we are
         self.imageIndexes = [(0,0),[]]
 
+        #Enable animation
         self.animEnable = False
-
+        #The current index in the list
         self.animIndex = 0
+        #How often should the animation update
         self.animKey = 0
+        #When was the animation laste updated
         self.animLast = 0
+
         self.animHasRestarted = False
 
     def nextImage(self):

@@ -4,9 +4,6 @@
 import math
 
 def worldToScreen(worldPos, screenView):
-    #if screenView.collidepoint(worldPos):
-        #return worldPos
-
     x = worldPos[0] - screenView.x
     y = worldPos[1] - screenView.y
 

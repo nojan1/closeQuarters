@@ -8,6 +8,7 @@ import os
 
 from pygame import *
 
+#Get a weapon object from name
 def WeaponFactory(name):
     weapons = {"pistol": Pistol, "autorifle": AutoRifle, "laser": Laser}    
     return weapons[name]()
@@ -31,6 +32,7 @@ class Bullet(object):
         self.hasMoved = True
 
     def hitMob(self, map):
+        #Create dummy rectangle to aid in collision detection
         selfRect = Rect(self.pos, (1,1))
         for m in map.mobs:
             if selfRect.colliderect(m.getRect()):
@@ -60,23 +62,28 @@ class Weapon(object):
         self.fireSound = None
 
     def getHUDText(self):
+        #HUD text is the text showed in the HUD, used to indicate the state or life of the weapon
         return ""
         
     def weaponUpkeep(self, numTicks):
         pass
 
     def isDepleted(self):
+        #Returns true if the weapon is used up and should be discarded
         return False
 
     def fire(self, startPos, angle, numTicks, channel):
         if self.rof == 0:
             raise NotImplementedError("ROF is zero = Not proper weapon")
 
+        #Limit rate of fire
         if numTicks - self.lastFire > (1000.0 / self.rof):
             if self.fireSound != None:
                 channel.play(self.fireSound)
 
             self.lastFire = numTicks
+            
+            #Return bullet of the correct type
             return self.bulletClass(startPos, angle)
         else:
             return None
@@ -86,10 +93,12 @@ class Pistol(Weapon):
     def __init__(self):
         Weapon.__init__(self)
 
+        #Set correct resource
         self.HUDImage = image.load(os.path.join(GRAPHICPATH, "pistol.png"))
         self.fireSound = mixer.Sound(os.path.join(SOUNDPATH, "barreta_m9.wav"))
         self.fireSound.set_volume(0.8)
 
+        #...and attributes
         self.damage = 1
         self.rof = 1.5
 
@@ -114,6 +123,7 @@ class AutoRifle(Pistol):
         return retVal
 
     def isDepleted(self):
+        #When the ammo is gone it is dead...
         return self.shotsRemaining <= 0 
 
     def getHUDText(self):
@@ -134,11 +144,13 @@ class Laser(Weapon):
         self.damage = 2
         self.rof = 3
 
+        #Weapon temperature variables
         self.stressLevel = 0
         self.lastCool = 0
 
     def weaponUpkeep(self, numTicks):
         if numTicks - self.lastCool > LASERTHRESHOLD * 0.4:
+            #Cooldown of weapon
             self.lastCool = numTicks
             self.stressLevel -= 1
 
@@ -170,6 +182,7 @@ class Laser(Weapon):
     def isDepleted(self):
         return self.stressLevel == 4
 
+#Custom bullet for laser rifle
 class LaserBullet(Bullet):
     def __init__(self, pos, angle, speed = 10):
         Bullet.__init__(self, pos, angle, speed)

@@ -14,6 +14,7 @@ class GameOverScreen(Mode):
         self.game = game
         self.playerWon = playerWon
 
+        #Save the last screen drawn by the core, this will be used as the background to give the illusion of a floating menu
         self.lastScreen = game.core.screen
 
         if self.playerWon:
@@ -42,6 +43,7 @@ class GameOverScreen(Mode):
     def onDraw(self, screen, core, numTicks):
         screen.blit(self.lastScreen, (0,0))
         
+        #Center texts
         frameRect = Rect((0, 120), self.imageFrame.get_size())
         frameRect.x = (core.res[0] / 2) - (frameRect.width / 2)
 
@@ -50,17 +52,20 @@ class GameOverScreen(Mode):
 
         screen.blit(self.imageTopic, topicRect)
         
+        #Calculate statistics
         if self.game.shotsFired == 0:
             accuracy = 0
         else:
             accuracy = int((float(self.game.shotsHit) / float(self.game.shotsFired)) * 100.0)
 
+        #Prepare rendered fonts
         header = self.fontHeader.render("Statistics", True, (0,0,0))
         line1 = self.fontContent.render("Shots fired: %i" % self.game.shotsFired, True, (0,0,0))
         line2 = self.fontContent.render("Shots hit: %i" % self.game.shotsHit, True, (0,0,0))
         line3 = self.fontContent.render("Accuracy: %i percent" % accuracy, True, (0,0,0))
 
         screen.blit(self.imageFrame, frameRect)
+        #Draw the fonts
         self.drawTexts(screen, frameRect.move(20,20).topleft, [header, line1, line2, line3])
 
     def handleEvent(self, event, core, numTicks):

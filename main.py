@@ -18,6 +18,7 @@ from menu import *
 import argparse
 
 if __name__ == "__main__":    
+    #Parse cli arguments
     parser = argparse.ArgumentParser(description='2D top view zombie shooter game in cramped coridors', epilog='Have fun shooting zombies :)')
     parser.add_argument("--draw-fps", help="Display FPS counter in upper left corner", action="store_true")
     parser.add_argument("-r", "--resolution", help="The size of game window to use. Please note that the menu backdrop might not display correctly on lower resolutions", default="1024x768")
@@ -30,6 +31,7 @@ if __name__ == "__main__":
         print("Warning: Unsupported resolution format defaulting to 1024x768")
         res = (1024, 768)
 
+    #Create the core with correct resolution
     core = Core(res, args.fullscreen, args.draw_fps)
     core.doInit()
     core.setActiveMode( Menu(core) )

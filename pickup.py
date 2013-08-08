@@ -17,6 +17,7 @@ class Pickup(Floor):
         self.used = False
 
     def draw(self, screen, game, numTicks = 0):
+        #Draw the base tile = Floor
         Floor.draw(self, screen, game, numTicks)
         
         if not self.used:
@@ -25,8 +26,6 @@ class Pickup(Floor):
             
             screen.blit(self.glowImage, Rect(rect.topleft, (32,32)))
             screen.blit(self.groundImage, rect)
-            
-            #draw.circle(screen, (0, 0, 150), rect.center, int(rect.width * 0.6), 1) 
 
     def onCollision(self, game, isPlayer):
         if not isPlayer or self.used:
@@ -41,11 +40,16 @@ class WeaponPickup(Pickup):
     def __init__(self, location, tileTextures, weaponObj):
         Pickup.__init__(self, location, tileTextures, weaponObj.groundImage)
 
+        #Contains a actual object of a weapon, not just a class
         self.weaponObj = weaponObj
 
     def onPickup(self, game):
+        #Insert weapon object into players weapon structure
         game.player.weapons.insert(0, self.weaponObj)
+
+        #Pickup is now used
         self.used = True
+
         return False
 
 class HealthPickup(Pickup):
@@ -54,6 +58,7 @@ class HealthPickup(Pickup):
          Pickup.__init__(self, location, tileTextures, groundImage)
 
     def onPickup(self, game):
+        #Increment player health
         game.player.health += 2.5
         if game.player.health > game.player.maxHealth:
             game.player.health = game.player.maxHealth

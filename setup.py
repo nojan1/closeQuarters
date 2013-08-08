@@ -1,5 +1,7 @@
 from distutils.core import setup
 
+#Only usefull with the included PKGBUILD since there is no proper package
+
 setup(name='closequarters',
       version='1.0',
       description='2D top view zombie shooter game in cramped coridors',

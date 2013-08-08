@@ -29,9 +29,11 @@ Press ESCAPE to return to the menu"""
     def onDraw(self, screen, core, numTicks):
         screen.fill((0,0,0))
 
+        #Draw the topic
         topic = self.fontHeader.render("Instructions", True, (255,255,255))
         screen.blit(topic, (40,40))
         
+        #Draw all the text lines on the screen
         x,y = (50, 100)
         for line in self.text.split("\n"):
             rendered = self.fontContent.render(line, True, (255,255,255))

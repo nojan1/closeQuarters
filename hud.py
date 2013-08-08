@@ -21,6 +21,7 @@ class HUD(object):
         mainRect.x = game.core.res[0] - mainRect.width + 43
         mainRect.y = game.core.res[1] - mainRect.height + 43
 
+        #Calculate the position the life indicator based on player life
         barOffset = int(160.0 * (self.player.health / self.player.maxHealth))
         slideRect = Rect(mainRect.topright, self.slideImg.get_size())
         slideRect.move_ip(-512, (88 - barOffset))

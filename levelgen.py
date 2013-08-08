@@ -33,6 +33,7 @@ class LevelGenerator(object):
             room.height = random.randint(ROOMMIN, ROOMMAX)
 
             posFound = False
+            #Randomize room position until we find a valid location
             while not posFound:
                 if attempts == MAXROOMALLOCATTEMPTS:
                     #print("Could not resolve room placement for room %i, bailing" % (roomID+1))
@@ -56,24 +57,28 @@ class LevelGenerator(object):
             if not posFound:
                 continue 
 
-            #Place waypoint
+            #Place waypoint (used later when making cooridors)
             wpX = random.randint(room.x + 1 + int(CORTHICKNESS / 2), room.x + room.width - 1 - int(CORTHICKNESS / 2))
             wpY = random.randint(room.y + 1 + int(CORTHICKNESS / 2), room.y + room.height - 1 - int(CORTHICKNESS / 2) )
             self.roomInfo.append( (room, (wpX, wpY)) )
 
+            #Add floors
             for x in range(room.x, room.x + room.width):
                 for y in range(room.y, room.y + room.height):
                     self.mapGrid[x][y] = "#"
 
         #Sort rooms in order of Y coordinates
         self.roomInfo.sort(key=lambda r: r[0].y)
+
         #print("Placed %i rooms" % len(self.roomInfo))
 
     def makeCor(self):
-        #Generate corridors
+        #Generate corridors between waypoints
         for r, w in self.roomInfo:
             distance = -1
             nearest = []
+            
+            #Find the nearest room to the current one
             for r2, w2 in self.roomInfo:
                 if r2 == r:
                     continue
@@ -82,9 +87,6 @@ class LevelGenerator(object):
                 if distance == -1 or newDistance < distance:
                     distance = newDistance
                     nearest = (r2, w2)
-
-            #Only needs one coridor?
-            #roomInfo.remove( (r2, w2) )
 
             #print("Needs to make coridor between %s and %s" % (w, nearest[1]))
             if math.degrees(angle) % 90 == 0:
@@ -102,30 +104,37 @@ class LevelGenerator(object):
                     self.placeCor((nearest[1][0], w[1]), nearest[1], True)
 
     def placeCor(self, start, end, joinUp = False):
+        #Calculate angle between start and end as well as normalizing it (making sure it is positive)
         angle, distance = getAngleDistance(start, end)
         angle = int(math.degrees(angle))
         if angle < 0:
             angle += 360
 
+        #Determine which of the foor main angles we are in (0, 90, 180, 270)
         angleIndex = int((angle % 360) / 90) 
         increments = [(1,0), (0,1), (-1,0), (0,-1)]
 
         increment = increments[int(angleIndex)]
 
+        #Means that this is a cooridor bend and that the floors needs to extend further to join up
         if joinUp:
             start = ( start[0] + int((increment[0] * -1) * (CORTHICKNESS / 2)), start[1] + int((increment[1] * -1) * (CORTHICKNESS / 2)) )
             distance = getAngleDistance(start, end)[1]
 
+        
         iMin = int((CORTHICKNESS / 2) * -1)
         iMax = int(CORTHICKNESS / 2)
+        #This loop is for cooridor thickness
         for i in range(iMin, iMax + 1):
             sX = start[0] + (i * increment[1])
             sY = start[1] + (i * increment[0])
 
+            #This is the cooridor length
             for z in range(int(distance)):
                 x = sX + (z * increment[0])
                 y = sY + (z * increment[1])
                 try:
+                    #Place floor tile
                     if self.mapGrid[x][y] != "?": 
                         self.mapGrid[x][y] = "#"
                 except:
@@ -140,6 +149,7 @@ class LevelGenerator(object):
         x2 = self.roomInfo[-1][0].x + int(self.roomInfo[-1][0].width / 2)
         y2 = self.roomInfo[-1][0].y + self.roomInfo[-1][0].height - 1
 
+        #Make the level way in and way out
         for i in range(length):
             self.mapGrid[x1 + i][y1 - 1] = "#"
             self.mapGrid[x1 + i][y1 - 2] = "#"
@@ -149,6 +159,7 @@ class LevelGenerator(object):
             self.mapGrid[x2 + i][y2 + 2] = "#"
             self.mapGrid[x2 + i][y2 + 3] = "+"
 
+        #Place the player start position
         self.mapGrid[x1 + int(length / 2)][y1-2] = "P"
         self.playerPos = (x1 + int(length / 2), y1 - 2)
             
@@ -164,6 +175,7 @@ class LevelGenerator(object):
                 #place pickup
                 char = list(["L", "R", "H"])[random.randint(0,2)]
             else:
+                #Place mob
                 char = list(["Z", "Z", "S"])[random.randint(0,2)]
     
             self.mapGrid[pos[0]][pos[1]] = char        

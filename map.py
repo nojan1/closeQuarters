@@ -21,6 +21,7 @@ class Map(object):
         self.mobs = []
 
         self.game = game
+        #The position of the player
         self.playerPosCache = None
         
         self.levelID = levelID
@@ -31,20 +32,25 @@ class Map(object):
         self.tiles = []
         mobsToAlloc = []
 
+        #Textures for tiles and mobs
         tileTextures = TextureSet("dungeon_crawl.png")
         zombieTextures = TextureSet("zombie_topdown.png")
         spiderTextures = TextureSet("spider_topdown.png")
 
+        #Arguments for mob creation
         mobDict = {"Z": [Zombie, 2, zombieTextures], "S": [Spider, 4, spiderTextures]}
 
         path = os.path.join(LEVELPATH, str(levelID)+".lvl")
+        #If there is a level file for the map the use that
         if os.path.exists(path):
            data = open(path, "r").read()
         else:
+            #...otherwise generate level on the fly"
             levelGen = LevelGenerator()
             data = levelGen.generateOutput()
             print("Note: Level was auto generated")
 
+        #Loop through all the lines and create objects based on the characters
         for yPos,line in enumerate(data.split("\n")):
             x = []
             for xPos, char in enumerate(line.strip().upper()):
@@ -93,11 +99,11 @@ class Map(object):
             
     def updateMobs(self, game, tickCount):
         for m in self.mobs:
-            #if m.getRect().colliderect(game.getView()):
             m.onActivation(game, tickCount)
 
     def drawMobsInView(self, screen, game, numTicks):
         for m in self.mobs:
+            #Only mobs currently in view needs to be drawn
             if m.getRect().colliderect(game.getView()):
                 m.draw(screen, game, numTicks)
 
@@ -156,6 +162,7 @@ class Map(object):
         if mobHitted.takeDamage(weapon.damage):
             self.mobs.remove(mobHitted)
 
+    #Check if there is a mob on a specified position (Rect)
     def mobPresent(self, rect):
         for m in self.mobs:
             if m.getRect().colliderect(rect):
@@ -163,10 +170,12 @@ class Map(object):
         
         return False
 
+    #Function to place non overlapping mobs on the map
     def allocateMobs(self, mobsToAlloc):
         for (tileCoords, numMobs, mobClass, mobTextures, ai) in mobsToAlloc: 
             basePos = (tileCoords[0] * TILESIZE[0], tileCoords[1] * TILESIZE[1])
 
+            #If the mob can't be placed on the first spot tried it will be placed on directions specified in this list
             posDirs = [(0,-1), (1,0), (0,1), (-1,0)]
             random.shuffle(posDirs)
 
@@ -176,11 +185,13 @@ class Map(object):
                     #Find new position
                     addedDistance = 0
                     while 1:
+                        #Add distance until a correct location is found
                         addedDistance += testMob.getRect().width
                         newPos = (basePos[0] + (posDirs[0][0] * addedDistance), basePos[1] + (posDirs[0][1] * addedDistance))
                         testMob = mobClass(newPos, ai, mobTextures)
                 
                         if not self.isAllowedPosition(testMob.getRect()):
+                            #Test another direction
                             posDirs.pop(0)
                             addedDistance = 0
                             if len(posDirs) == 0:

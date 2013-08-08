@@ -35,6 +35,7 @@ class Player(nSprite):
         if self.health < 0:
             self.health = 0
 
+    #Uses trigonometry to calculate angle between mouse pointer and player position
     def setFacing(self, mouseCoords, game):
         (x1, y1) = self.getRectScreen(game).center
         (x2, y2) = mouseCoords
@@ -44,9 +45,11 @@ class Player(nSprite):
 
         self.facingAngle = math.atan2(dY * -1, dX * -1)
 
+    #Fire the currect weapon
     def fireWeapon(self, numTicks):
         retVal = self.weapons[0].fire(self.getRect().center, self.facingAngle, numTicks, self.fireChannel)
         
+        #Depleted weapons = crap
         if self.weapons[0].isDepleted():
             self.weapons.pop(0)
 
@@ -62,6 +65,7 @@ class Player(nSprite):
         yMove *= PLAYERMOVE
         tmpRect.move_ip(xMove, yMove)
 
+        #Collision handling
         if worldMap.isAllowedPosition(tmpRect, True) and not worldMap.mobPresent(tmpRect):
             self.pos = tmpRect.topleft
             self.hasMoved = True
